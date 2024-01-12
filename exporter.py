@@ -1,4 +1,5 @@
 
+from datetime import datetime
 from typing import Dict, List
 from openpyxl import Workbook
 
@@ -8,6 +9,8 @@ from article import Article
 def export_news(news_per_source: List[Dict[str, List[Article]]]):
     print("Exporting news to Excel...")
     
+    filename = f'{datetime.now().strftime("%d.%m.%Y")}-news.xlsx'
+
     wb = Workbook()
     ws = wb.active
     
@@ -58,4 +61,7 @@ def export_news(news_per_source: List[Dict[str, List[Article]]]):
             ws.append([])
             row += 1
 
-        wb.save('news.xlsx')
+        wb.save(filename=filename)
+
+    print("Exporting news to Excel... Done!")
+    return filename
