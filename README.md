@@ -1,2 +1,0 @@
-# LINUS Competitor News Scraper
-
