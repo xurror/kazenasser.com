@@ -52,10 +52,11 @@ class Scraper:
                 print("Consent Form - ", consent_button)
                 if consent_button:
                     consent_button.submit()
-            except Exception as e:
+                    # throttle to allow the page to load
+                    time.sleep(5)
+            except Exception:
                 print("No Consent Form")
 
-            time.sleep(5)
 
             news_results = self.browser.find_elements(By.CSS_SELECTOR, 'div#rso > div > div > div > div')
             print("News Results:", len(news_results))
