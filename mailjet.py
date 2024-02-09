@@ -1,7 +1,5 @@
-# import the mailjet wrapper
-import json
-from mailjet_rest import Client
 import os
+from mailjet_rest import Client
 
 # Get your environment Mailjet keys
 API_KEY = os.environ['MJ_APIKEY_PUBLIC']
@@ -27,6 +25,10 @@ recipients = [
         'Name': 'Klemens Kuhn'
     },
     {
+        'Email': 'lukas.endl@linus-finance.com',
+        'Name': 'Lukas Endl'
+    },
+    {
         'Email': 'lucas.boventer@linus-finance.com',
         'Name': 'Lucas Boventer'
     },
@@ -36,12 +38,12 @@ recipients = [
     },
 ]
 
-test_recipients = [
-    {
-        'Email': 'nasser.kaze@linus-finance.com',
-        'Name': 'Nasser Kaze'
-    }
-]
+cc = [
+        {
+            'Email': 'nasser.kaze@linus-finance.com',
+            'Name': 'Nasser Kaze'
+        }
+    ]
 
 def send_email(filename, attachment):
     data = {
@@ -51,13 +53,8 @@ def send_email(filename, attachment):
                     'Email': 'no-reply@app.linus-finance.com',
                     'Name': 'LINUS News Scraper'
                 },
-                'To': test_recipients,
-                "Cc": [
-                    {
-                        'Email': 'nasser.kaze@linus-finance.com',
-                        'Name': 'Nasser Kaze'
-                    }
-                ],
+                'To': recipients,
+                "Cc": cc,
                 'Subject': 'Ihre Bi-Weekly Competitor-News-Überblick!',
                 'TextPart': 'Competitor News from Scraper Service!',
                 'HTMLPart': """
@@ -77,4 +74,4 @@ def send_email(filename, attachment):
 
     print("Sending email...")
     result = mailjet.send.create(data=data)
-    print(result.status_code)
+    print(f"Sending email... Done! with status ${result.status_code}")
