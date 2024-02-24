@@ -45,7 +45,6 @@ class Scraper:
             news_per_source[source['competitor']] = []
 
             self.browser.get(source['search_url'])
-            time.sleep(2)
 
             try:
                 consent_button = self.browser.find_element(By.CSS_SELECTOR, "form[action='https://consent.google.de/save']")  # noqa: E501
@@ -53,7 +52,7 @@ class Scraper:
                 if consent_button:
                     consent_button.submit()
                     # throttle to allow the page to load
-                    time.sleep(5)
+                    time.sleep(1)
             except Exception:
                 print("No Consent Form")
 

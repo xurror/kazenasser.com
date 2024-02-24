@@ -2,3 +2,6 @@
 __pycache__/
 *.xlsx
 chromedriver
+.idea
+.DS_Store
+

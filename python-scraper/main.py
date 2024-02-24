@@ -7,7 +7,7 @@ from mailjet import send_email
 from scraper import Scraper
 
 def handler(event, context):
-    with open('sources.json') as f:
+    with open('../sources.json') as f:
         sources = json.load(f)
         
     scraper = Scraper()
@@ -26,3 +26,4 @@ def handler(event, context):
 
 if __name__ == '__main__':
     handler(None, None)
+
