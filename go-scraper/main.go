@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/markusmobius/go-dateparser"
+	"github.com/xuri/excelize/v2"
 	"log"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,18 +41,19 @@ func main() {
 		log.Fatalf("Error unmarshalling JSON: %v", err)
 	}
 
-	//for _, source := range sources {
-	//	log.Printf("Competitor: %s, Website: %s, Google Search URL: %s", source.Competitor, source.Website, source.GoogleSearchUrl)
-	//}
+	scrapedNews := scrapeNews(sources)
+	writeNewsToExcel(scrapedNews)
 
-	//firstSource := sources[0]
+}
+
+func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 	c := colly.NewCollector(
 	//colly.AllowedDomains("*.google.de", "*.google.com"),
 	//colly.AllowURLRevisit(),
 	//colly.Async(true),
 	)
 
-	err = c.Limit(&colly.LimitRule{
+	err := c.Limit(&colly.LimitRule{
 		// Filter domains affected by this rule
 		DomainGlob: "*",
 		// Set a delay between requests to these domains
@@ -60,7 +63,7 @@ func main() {
 	})
 	if err != nil {
 		print(err)
-		return
+		return nil
 	}
 
 	c.OnHTML("form[action='https://consent.google.de/save']", func(e *colly.HTMLElement) {
@@ -150,11 +153,85 @@ func main() {
 	for _, source := range sources {
 		err = c.Visit(source.GoogleSearchUrl)
 		if err != nil {
-			return
+			return nil
 		}
 	}
 
-	print("Data Extracts: ", dataExtracts)
+	return dataExtracts
+}
+
+func writeNewsToExcel(data map[string][]NewsArticle) {
+	f := excelize.NewFile()
+	defer func() {
+		if err := f.Close(); err != nil {
+			fmt.Println(err)
+		}
+	}()
+
+	// Create a new sheet.
+	sheet := "Competitor News"
+	index, err := f.NewSheet(sheet)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defaultStyle, _ := f.NewStyle(&excelize.Style{
+		Font: &excelize.Font{Size: 11},
+	})
+
+	boldStyle, _ := f.NewStyle(&excelize.Style{
+		Font:       &excelize.Font{Size: 11, Bold: true},
+		Protection: &excelize.Protection{Locked: true},
+	})
+
+	_ = f.SetColStyle(sheet, "A", defaultStyle)
+	_ = f.SetColStyle(sheet, "B", defaultStyle)
+	_ = f.SetColStyle(sheet, "C", defaultStyle)
+	_ = f.SetColStyle(sheet, "D", defaultStyle)
+	_ = f.SetColStyle(sheet, "E", defaultStyle)
+	_ = f.SetColStyle(sheet, "F", defaultStyle)
+
+	_ = f.SetColWidth(sheet, "A", "A", 5)
+	_ = f.SetColWidth(sheet, "B", "B", 12)
+	_ = f.SetColWidth(sheet, "C", "C", 85)
+	_ = f.SetColWidth(sheet, "D", "D", 120)
+	_ = f.SetColWidth(sheet, "E", "E", 30)
+	_ = f.SetColWidth(sheet, "F", "F", 50)
+
+	row := 1
+	for source, news := range data {
+		_ = f.SetCellValue(sheet, "A"+strconv.Itoa(row), source)
+		_ = f.MergeCell(sheet, "A"+strconv.Itoa(row), "F"+strconv.Itoa(row))
+		_ = f.SetRowStyle(sheet, row, row, boldStyle)
+
+		_ = f.SetCellValue(sheet, "A"+fmt.Sprint(row+1), "No")
+		_ = f.SetCellValue(sheet, "B"+fmt.Sprint(row+1), "Date")
+		_ = f.SetCellValue(sheet, "C"+fmt.Sprint(row+1), "Title")
+		_ = f.SetCellValue(sheet, "D"+fmt.Sprint(row+1), "Description")
+		_ = f.SetCellValue(sheet, "E"+fmt.Sprint(row+1), "Domain")
+		_ = f.SetCellValue(sheet, "F"+fmt.Sprint(row+1), "Link")
+		_ = f.SetRowStyle(sheet, row+1, row+1, boldStyle)
+
+		for j, article := range news {
+			_ = f.SetCellValue(sheet, "A"+fmt.Sprint(row+j+2), j+1)
+			_ = f.SetCellValue(sheet, "B"+fmt.Sprint(row+j+2), article.Date)
+			_ = f.SetCellValue(sheet, "C"+fmt.Sprint(row+j+2), article.Title)
+			_ = f.SetCellValue(sheet, "D"+fmt.Sprint(row+j+2), article.Description)
+			_ = f.SetCellValue(sheet, "E"+fmt.Sprint(row+j+2), article.Domain)
+			_ = f.SetCellValue(sheet, "F"+fmt.Sprint(row+j+2), article.Link)
+		}
+		row += len(news) + 2
+		_ = f.InsertRows(sheet, row, 1)
+		row++
+	}
+
+	// Set active sheet of the workbook.
+	f.SetActiveSheet(index)
+	// Save spreadsheet by the given path.
+	if err := f.SaveAs("news.xlsx"); err != nil {
+		fmt.Println(err)
+	}
 }
 
 func getNewSourceFromUrl(sources []NewsSource, url string) NewsSource {
