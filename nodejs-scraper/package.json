@@ -1,0 +1,14 @@
+{
+  "name": "nodejs-scraper",
+  "version": "1.0.0",
+  "description": "a nodejs news scraper for Linus competitors",
+  "main": "index.js",
+  "author": "Nasser Kaze",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "puppeteer": "^21.6.1",
+    "xlsx": "^0.18.5"
+  }
+}
