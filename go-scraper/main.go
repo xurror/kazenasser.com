@@ -1,15 +1,17 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/markusmobius/go-dateparser"
-	"github.com/xuri/excelize/v2"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+  "github.com/mailjet/mailjet-apiv3-go/v4"
+	"github.com/markusmobius/go-dateparser"
+	"github.com/xuri/excelize/v2"
 
 	"github.com/gocolly/colly/v2"
 )
@@ -32,18 +34,24 @@ func main() {
 	// Your code here
 	content, err := os.ReadFile("../sources.json")
 	if err != nil {
-		log.Fatalf("Error reading file: %v", err)
+		log.Fatalf("Error reading file: %v\n", err)
 	}
 
 	var sources []NewsSource
 	err = json.Unmarshal(content, &sources)
 	if err != nil {
-		log.Fatalf("Error unmarshalling JSON: %v", err)
+		log.Fatalf("Error unmarshalling JSON: %v\n", err)
 	}
 
 	scrapedNews := scrapeNews(sources)
-	writeNewsToExcel(scrapedNews)
+  filename := writeNewsToExcel(scrapedNews)
 
+  fileBytes, err := os.ReadFile(filename)
+  if err != nil {
+    log.Fatalf("Error loading news file: %v\n", err)
+  }
+
+  dispatchMails(filename, base64.StdEncoding.EncodeToString(fileBytes))
 }
 
 func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
@@ -160,11 +168,11 @@ func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 	return dataExtracts
 }
 
-func writeNewsToExcel(data map[string][]NewsArticle) {
+func writeNewsToExcel(data map[string][]NewsArticle) (filename string) {
 	f := excelize.NewFile()
 	defer func() {
 		if err := f.Close(); err != nil {
-			fmt.Println(err)
+      fmt.Printf("Error closing sheet: %v\n", err)
 		}
 	}()
 
@@ -172,8 +180,7 @@ func writeNewsToExcel(data map[string][]NewsArticle) {
 	sheet := "Competitor News"
 	index, err := f.NewSheet(sheet)
 	if err != nil {
-		fmt.Println(err)
-		return
+    log.Fatalf("Error creating new xlsx sheet: %v\n", err)
 	}
 
 	defaultStyle, _ := f.NewStyle(&excelize.Style{
@@ -224,14 +231,20 @@ func writeNewsToExcel(data map[string][]NewsArticle) {
 		row += len(news) + 2
 		_ = f.InsertRows(sheet, row, 1)
 		row++
+
+		fmt.Printf("Done writing extracts to excel\n")
 	}
 
 	// Set active sheet of the workbook.
 	f.SetActiveSheet(index)
 	// Save spreadsheet by the given path.
-	if err := f.SaveAs("news.xlsx"); err != nil {
-		fmt.Println(err)
+
+  filename = time.Now().Format("02.01.2006") + "-news.xlsx"
+	if err := f.SaveAs(filename); err != nil {
+    log.Fatalf("Error creating xlsx file: %v\n", err)
 	}
+
+  return filename
 }
 
 func getNewSourceFromUrl(sources []NewsSource, url string) NewsSource {
@@ -246,3 +259,72 @@ func getNewSourceFromUrl(sources []NewsSource, url string) NewsSource {
 		GoogleSearchUrl: "consent page",
 	}
 }
+
+func dispatchMails(filename string, attachment string) {
+  publicKey := os.Getenv("MJ_APIKEY_PUBLIC")
+  privateKey := os.Getenv("MJ_APIKEY_PRIVATE")
+
+  mj := mailjet.NewMailjetClient(publicKey, privateKey)
+
+  messages := mailjet.MessagesV31{
+    Info: []mailjet.InfoMessagesV31{
+      {
+        From: &mailjet.RecipientV31{
+          Email: "no-reply@app.linus-finance.com",
+          Name: "LINUS News Scraper",
+        },
+        To: &mailjet.RecipientsV31{
+          // mailjet.RecipientV31{
+          //   Email: "tom.grobien@linus-finance.com",
+          //   Name: "Tom Grobien",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "noah.kiesel@linus-finance.com",
+          //   Name: "Noah Kiesel",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "salim.buggle@linus-finance.com",
+          //   Name: "Salim Bugglé",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "klemens.kuhn@linus-finance.com",
+          //   Name: "Klemens Kuhn",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "lukas.endl@linus-finance.com",
+          //   Name: "Lukas Endl",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "lucas.boventer@linus-finance.com",
+          //   Name: "Lucas Boventer",
+          // },
+          // mailjet.RecipientV31{
+          //   Email: "christopher.danwerth@linus-finance.com",
+          //   Name: "Christopher Danwerth",
+          // },
+          mailjet.RecipientV31{
+            Email: "nasser.kaze@linus-finance.com",
+            Name: "Nasser Kaze",
+          },
+        },
+        Subject: "Ihre Bi-Weekly Competitor-News-Überblick!",
+        TextPart: "Competitor News from Scraper Service!",
+        HTMLPart: "<h3>Bi-weekly News Overview</h3><p>Please find attached the bi-weekly news overview.</p>",
+        Attachments: &mailjet.AttachmentsV31{
+          mailjet.AttachmentV31{
+            ContentType: "application/octet-stream",
+            Filename: filename,
+            Base64Content: attachment,
+          },
+        },
+      },
+    },
+  }
+
+  res, err := mj.SendMailV31(&messages)
+  if err != nil {
+    log.Fatalf("Error Sending email: %v\n", err)
+  }
+  fmt.Printf("MJ Res: %+v\n", res)
+}
+

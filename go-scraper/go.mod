@@ -4,7 +4,9 @@ go 1.20
 
 require (
 	github.com/gocolly/colly/v2 v2.1.0
+	github.com/mailjet/mailjet-apiv3-go/v4 v4.0.1
 	github.com/markusmobius/go-dateparser v1.2.1
+	github.com/xuri/excelize/v2 v2.8.0
 )
 
 require (
@@ -22,6 +24,7 @@ require (
 	github.com/jalaali/go-jalaali v0.0.0-20210801064154-80525e88d958 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/magefile/mage v1.14.0 // indirect
+	github.com/mailjet/mailjet-apiv3-go/v3 v3.2.0 // indirect
 	github.com/mohae/deepcopy v0.0.0-20170929034955-c48cc78d4826 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
@@ -30,7 +33,6 @@ require (
 	github.com/tetratelabs/wazero v1.2.1 // indirect
 	github.com/wasilibs/go-re2 v1.3.0 // indirect
 	github.com/xuri/efp v0.0.0-20230802181842-ad255f2331ca // indirect
-	github.com/xuri/excelize/v2 v2.8.0 // indirect
 	github.com/xuri/nfp v0.0.0-20230819163627-dc951e3ffe1a // indirect
 	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/exp v0.0.0-20220321173239-a90fa8a75705 // indirect
