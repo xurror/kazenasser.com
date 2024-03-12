@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/base64"
-	"encoding/json"
+  "encoding/base64"
+  "encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -12,7 +12,9 @@ import (
   "github.com/mailjet/mailjet-apiv3-go/v4"
 	"github.com/markusmobius/go-dateparser"
 	"github.com/xuri/excelize/v2"
-
+  "context"
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/gocolly/colly/v2"
 )
 
@@ -30,9 +32,9 @@ type NewsSource struct {
 	GoogleSearchUrl string `json:"search_url"`
 }
 
-func main() {
-	// Your code here
-	content, err := os.ReadFile("../sources.json")
+func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+  // Your code here
+	content, err := os.ReadFile("sources.json")
 	if err != nil {
 		log.Fatalf("Error reading file: %v\n", err)
 	}
@@ -52,6 +54,18 @@ func main() {
   }
 
   dispatchMails(filename, base64.StdEncoding.EncodeToString(fileBytes))
+
+  response := events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       "\"Hello from Lambda!\"",
+	}
+	return response, nil
+}
+
+func main() {
+
+  lambda.Start(handler)
+
 }
 
 func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
@@ -232,7 +246,7 @@ func writeNewsToExcel(data map[string][]NewsArticle) (filename string) {
 		_ = f.InsertRows(sheet, row, 1)
 		row++
 
-		fmt.Printf("Done writing extracts to excel\n")
+		fmt.Printf("Done writing %v extracts to excel\n", source)
 	}
 
 	// Set active sheet of the workbook.

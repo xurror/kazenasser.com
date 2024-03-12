@@ -7,6 +7,7 @@ require (
 	github.com/mailjet/mailjet-apiv3-go/v4 v4.0.1
 	github.com/markusmobius/go-dateparser v1.2.1
 	github.com/xuri/excelize/v2 v2.8.0
+	github.com/aws/aws-lambda-go v1.46.0
 )
 
 require (
