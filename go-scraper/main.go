@@ -1,21 +1,25 @@
 package main
 
 import (
-  "encoding/base64"
-  "encoding/json"
+	"bytes"
+	"context"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
-  "github.com/mailjet/mailjet-apiv3-go/v4"
-	"github.com/markusmobius/go-dateparser"
-	"github.com/xuri/excelize/v2"
-  "context"
+
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
+	// "github.com/aws/aws-lambda-go/lambda"
 	"github.com/gocolly/colly/v2"
+	"github.com/mailjet/mailjet-apiv3-go/v4"
+	"github.com/markusmobius/go-dateparser"
+	"github.com/markusmobius/go-dateparser/date"
+	"github.com/xuri/excelize/v2"
 )
 
 type NewsArticle struct {
@@ -23,7 +27,21 @@ type NewsArticle struct {
 	Title       string
 	Description string
 	Link        string
-	Date        string
+	Date        date.Date
+}
+
+type NewsArticles []NewsArticle
+
+func (p NewsArticles) Len() int {
+    return len(p)
+}
+
+func (p NewsArticles) Less(i, j int) bool {
+  return p[i].Date.Time.After(p[j].Date.Time)
+}
+
+func (p NewsArticles) Swap(i, j int) {
+    p[i], p[j] = p[j], p[i]
 }
 
 type NewsSource struct {
@@ -45,43 +63,58 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 		log.Fatalf("Error unmarshalling JSON: %v\n", err)
 	}
 
+  fmt.Printf("Loaded %v news sources from JSON file\n", len(sources))
+
 	scrapedNews := scrapeNews(sources)
-  filename := writeNewsToExcel(scrapedNews)
+  fileBuffer := writeNewsToExcel(scrapedNews)
 
-  fileBytes, err := os.ReadFile(filename)
-  if err != nil {
-    log.Fatalf("Error loading news file: %v\n", err)
-  }
-
-  dispatchMails(filename, base64.StdEncoding.EncodeToString(fileBytes))
+  dispatchMails(time.Now().Format("02.01.2006") + "-news.xlsx", base64.StdEncoding.EncodeToString(fileBuffer.Bytes()))
 
   response := events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       "\"Hello from Lambda!\"",
+		Body:       "\"Successfully Generated and Dispatched Competitor News!\"",
 	}
 	return response, nil
 }
 
 func main() {
 
-  lambda.Start(handler)
+  // lambda.Start(handler)
+  // Your code here
+	content, err := os.ReadFile("sources.json")
+	if err != nil {
+		log.Fatalf("Error reading file: %v\n", err)
+	}
 
+	var sources []NewsSource
+	err = json.Unmarshal(content, &sources)
+	if err != nil {
+		log.Fatalf("Error unmarshalling JSON: %v\n", err)
+	}
+
+  fmt.Printf("Loaded %v news sources from JSON file\n", len(sources))
+
+	scrapedNews := scrapeNews(sources)
+  fileBuffer := writeNewsToExcel(scrapedNews)
+
+  dispatchMails(time.Now().Format("02.01.2006") + "-news.xlsx", base64.StdEncoding.EncodeToString(fileBuffer.Bytes()))
 }
 
 func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 	c := colly.NewCollector(
-	//colly.AllowedDomains("*.google.de", "*.google.com"),
-	//colly.AllowURLRevisit(),
-	//colly.Async(true),
+	// colly.AllowedDomains("*.google.de", "*.google.com"),
+	  colly.AllowURLRevisit(),
+	  // colly.Async(true),
 	)
 
 	err := c.Limit(&colly.LimitRule{
 		// Filter domains affected by this rule
 		DomainGlob: "*",
+    Parallelism: 3,
 		// Set a delay between requests to these domains
-		Delay: 1 * time.Second,
+		// Delay: 1 * time.Second,
 		// Add an additional random delay
-		RandomDelay: 1 * time.Second,
+		// RandomDelay: 1 * time.Second,
 	})
 	if err != nil {
 		print(err)
@@ -103,24 +136,24 @@ func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 
 	var dataExtracts = map[string][]NewsArticle{}
 	c.OnHTML("div#main > div > div > a", func(e *colly.HTMLElement) {
-		log.Print("\n")
+		fmt.Print("\n")
 
 		link := strings.Replace(e.Attr("href"), "/url?q=", "", 1)
-		log.Print("Link: ", link)
+		fmt.Print("Link: ", link)
 
 		var date string
 		e.ForEach("div>div>div>span", func(i int, ce *colly.HTMLElement) {
 			date = ce.Text
-			log.Print("Date: ", date)
+			fmt.Print("Date: ", date)
 		})
-		dt, _ := dateparser.Parse(nil, date)
-		parsedDate := dt.Time.Format("02.01.2006")
-		log.Print("Parsed Date: ", parsedDate)
+		parsedDate, _ := dateparser.Parse(nil, date)
+		// parsedDate := dt.Time.Format("02.01.2006")
+		fmt.Print("Parsed Date: ", parsedDate)
 
 		var title string
 		e.ForEach("div>div>div>h3", func(i int, ce *colly.HTMLElement) {
 			title = ce.Text
-			log.Print("Title: ", title)
+			fmt.Print("Title: ", title)
 		})
 
 		var description string
@@ -128,14 +161,14 @@ func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 			if strings.Contains(ce.Text, date) {
 				description = strings.ReplaceAll(ce.Text, date, "")
 			}
-			log.Print("Description: ", description)
+			fmt.Print("Description: ", description)
 		})
 
 		var domain string
 		e.ForEach("div>div>div>div", func(i int, ce *colly.HTMLElement) {
 			if !strings.Contains(ce.Text, description) {
 				domain = ce.Text
-				log.Print("Domain: ", domain)
+				fmt.Print("Domain: ", domain)
 			}
 		})
 
@@ -179,10 +212,13 @@ func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 		}
 	}
 
+  // Wait until threads are finished
+	c.Wait()
+
 	return dataExtracts
 }
 
-func writeNewsToExcel(data map[string][]NewsArticle) (filename string) {
+func writeNewsToExcel(data map[string][]NewsArticle) (fileBuffer *bytes.Buffer) {
 	f := excelize.NewFile()
 	defer func() {
 		if err := f.Close(); err != nil {
@@ -234,9 +270,14 @@ func writeNewsToExcel(data map[string][]NewsArticle) (filename string) {
 		_ = f.SetCellValue(sheet, "F"+fmt.Sprint(row+1), "Link")
 		_ = f.SetRowStyle(sheet, row+1, row+1, boldStyle)
 
-		for j, article := range news {
+    sortedNews := make(NewsArticles, 0, len(news))
+    for _, d := range news {
+        sortedNews = append(sortedNews, d)
+    }
+    sort.Sort(sortedNews)
+		for j, article := range sortedNews {
 			_ = f.SetCellValue(sheet, "A"+fmt.Sprint(row+j+2), j+1)
-			_ = f.SetCellValue(sheet, "B"+fmt.Sprint(row+j+2), article.Date)
+			_ = f.SetCellValue(sheet, "B"+fmt.Sprint(row+j+2), article.Date.Time.Format("02.01.2006"))
 			_ = f.SetCellValue(sheet, "C"+fmt.Sprint(row+j+2), article.Title)
 			_ = f.SetCellValue(sheet, "D"+fmt.Sprint(row+j+2), article.Description)
 			_ = f.SetCellValue(sheet, "E"+fmt.Sprint(row+j+2), article.Domain)
@@ -253,12 +294,18 @@ func writeNewsToExcel(data map[string][]NewsArticle) (filename string) {
 	f.SetActiveSheet(index)
 	// Save spreadsheet by the given path.
 
-  filename = time.Now().Format("02.01.2006") + "-news.xlsx"
-	if err := f.SaveAs(filename); err != nil {
-    log.Fatalf("Error creating xlsx file: %v\n", err)
-	}
+  // delete the default sheet "Sheet1"
+  err = f.DeleteSheet("Sheet1")
+  if err != nil {
+    log.Fatalf("Error deleting Default sheet: %v\n", err)
+  }
 
-  return filename
+  fileBuffer, err = f.WriteToBuffer()
+  if err != nil {
+     log.Fatalf("Error creating xlsx file: %v\n", err)
+  }
+
+  return fileBuffer
 }
 
 func getNewSourceFromUrl(sources []NewsSource, url string) NewsSource {
@@ -270,7 +317,7 @@ func getNewSourceFromUrl(sources []NewsSource, url string) NewsSource {
 	return NewsSource{
 		Competitor:      "consent page",
 		Website:         "consent page",
-		GoogleSearchUrl: "consent page",
+		GoogleSearchUrl: url,
 	}
 }
 
@@ -326,7 +373,7 @@ func dispatchMails(filename string, attachment string) {
         HTMLPart: "<h3>Bi-weekly News Overview</h3><p>Please find attached the bi-weekly news overview.</p>",
         Attachments: &mailjet.AttachmentsV31{
           mailjet.AttachmentV31{
-            ContentType: "application/octet-stream",
+            ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             Filename: filename,
             Base64Content: attachment,
           },
