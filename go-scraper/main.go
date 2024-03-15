@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
-	// "github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/gocolly/colly/v2"
 	"github.com/mailjet/mailjet-apiv3-go/v4"
 	"github.com/markusmobius/go-dateparser"
@@ -51,24 +51,7 @@ type NewsSource struct {
 }
 
 func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-  // Your code here
-	content, err := os.ReadFile("sources.json")
-	if err != nil {
-		log.Fatalf("Error reading file: %v\n", err)
-	}
-
-	var sources []NewsSource
-	err = json.Unmarshal(content, &sources)
-	if err != nil {
-		log.Fatalf("Error unmarshalling JSON: %v\n", err)
-	}
-
-  fmt.Printf("Loaded %v news sources from JSON file\n", len(sources))
-
-	scrapedNews := scrapeNews(sources)
-  fileBuffer := writeNewsToExcel(scrapedNews)
-
-  dispatchMails(time.Now().Format("02.01.2006") + "-news.xlsx", base64.StdEncoding.EncodeToString(fileBuffer.Bytes()))
+  run()
 
   response := events.APIGatewayProxyResponse{
 		StatusCode: 200,
@@ -78,8 +61,11 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (events.A
 }
 
 func main() {
+  lambda.Start(handler)
+  // run()
+}
 
-  // lambda.Start(handler)
+func run() {
   // Your code here
 	content, err := os.ReadFile("sources.json")
 	if err != nil {
@@ -95,6 +81,11 @@ func main() {
   fmt.Printf("Loaded %v news sources from JSON file\n", len(sources))
 
 	scrapedNews := scrapeNews(sources)
+
+  if len(scrapedNews) == 0 {
+    log.Fatalf("No news was scraped")
+  }
+
   fileBuffer := writeNewsToExcel(scrapedNews)
 
   dispatchMails(time.Now().Format("02.01.2006") + "-news.xlsx", base64.StdEncoding.EncodeToString(fileBuffer.Bytes()))
@@ -138,7 +129,9 @@ func scrapeNews(sources []NewsSource) map[string][]NewsArticle {
 	c.OnHTML("div#main > div > div > a", func(e *colly.HTMLElement) {
 		fmt.Print("\n")
 
-		link := strings.Replace(e.Attr("href"), "/url?q=", "", 1)
+    href := e.Attr("href")
+		link := strings.Replace(href, "/url?q=", "", 1)
+    link = strings.Split(link, "&sa=")[0]
 		fmt.Print("Link: ", link)
 
 		var date string
@@ -335,34 +328,44 @@ func dispatchMails(filename string, attachment string) {
           Name: "LINUS News Scraper",
         },
         To: &mailjet.RecipientsV31{
+          mailjet.RecipientV31{
+            Email: "daniel.ebert@linus-finance.com",
+            Name: "Daniel Ebert",
+          },
+          mailjet.RecipientV31{
+            Email: "tom.grobien@linus-finance.com",
+            Name: "Tom Grobien",
+          },
+          mailjet.RecipientV31{
+            Email: "noah.kiesel@linus-finance.com",
+            Name: "Noah Kiesel",
+          },
+          mailjet.RecipientV31{
+            Email: "salim.buggle@linus-finance.com",
+            Name: "Salim Bugglé",
+          },
+          mailjet.RecipientV31{
+            Email: "klemens.kuhn@linus-finance.com",
+            Name: "Klemens Kuhn",
+          },
+          mailjet.RecipientV31{
+            Email: "lukas.endl@linus-finance.com",
+            Name: "Lukas Endl",
+          },
+          mailjet.RecipientV31{
+            Email: "lucas.boventer@linus-finance.com",
+            Name: "Lucas Boventer",
+          },
+          mailjet.RecipientV31{
+            Email: "christopher.danwerth@linus-finance.com",
+            Name: "Christopher Danwerth",
+          },
           // mailjet.RecipientV31{
-          //   Email: "tom.grobien@linus-finance.com",
-          //   Name: "Tom Grobien",
+          //   Email: "nasser.kaze@linus-finance.com",
+          //   Name: "Nasser Kaze",
           // },
-          // mailjet.RecipientV31{
-          //   Email: "noah.kiesel@linus-finance.com",
-          //   Name: "Noah Kiesel",
-          // },
-          // mailjet.RecipientV31{
-          //   Email: "salim.buggle@linus-finance.com",
-          //   Name: "Salim Bugglé",
-          // },
-          // mailjet.RecipientV31{
-          //   Email: "klemens.kuhn@linus-finance.com",
-          //   Name: "Klemens Kuhn",
-          // },
-          // mailjet.RecipientV31{
-          //   Email: "lukas.endl@linus-finance.com",
-          //   Name: "Lukas Endl",
-          // },
-          // mailjet.RecipientV31{
-          //   Email: "lucas.boventer@linus-finance.com",
-          //   Name: "Lucas Boventer",
-          // },
-          // mailjet.RecipientV31{
-          //   Email: "christopher.danwerth@linus-finance.com",
-          //   Name: "Christopher Danwerth",
-          // },
+        },
+        Cc: &mailjet.RecipientsV31{
           mailjet.RecipientV31{
             Email: "nasser.kaze@linus-finance.com",
             Name: "Nasser Kaze",
