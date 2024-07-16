@@ -1,3 +1,4 @@
+import MdxLayout from '@/components/mdx-layout'
 import { Section } from './section'
 import { ContactInfo } from './contact-info'
 
@@ -47,3 +48,10 @@ Main
 
 <Section section='teaching_positions' />
 
+
+
+
+ 
+export default function MDXPage({ children }) {
+  return <MdxLayout>{children}</MdxLayout>
+}
