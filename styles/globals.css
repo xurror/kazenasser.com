@@ -7,36 +7,22 @@
     @apply text-sm;
 }
 
+.cv-time-text {
+    @apply font-mono;
+    @apply italic;
+    @apply text-sm;
+}
+
 .timeline-vertical {
     margin-left: 15px;
 }
 
-.timeline-date {
-    @apply timeline-start;
-    @apply mb-auto;
+.timeline-vertical .timeline-start,
+.timeline-vertical .timeline-end {
+    @apply self-start;
 }
-
-:where(.timeline-vertical > li) > .timeline-start {
-    @apply mb-auto;
-}
-
-:where(.timeline-vertical > li:first-child) > .timeline-start {
-    @apply pt-3;
-}
-
-:where(.timeline-vertical > li:first-child) > .timeline-middle {
-    @apply mt-3;
-}
-
-/* :where(.timeline-vertical > li:nth-child) > .timeline-start {
-    @apply pt-3 !important;
-} */
 
 :where(.timeline-vertical > li) {
     grid-template-columns: 0 1fr;
     @apply my-0 !important;
 }
-
-/* :where(.timeline-end > h3) {
-    margin-top: 0 !important;
-} */

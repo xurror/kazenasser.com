@@ -6,6 +6,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
+// import remarkPdf from 'remark-pdf'
 import remarkRehype from 'remark-rehype'
 import rehypeRewrite from 'rehype-rewrite'
 import remarkCustomHeaderId from 'remark-custom-header-id';
