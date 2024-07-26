@@ -4,7 +4,7 @@ export default function Timeline() {
       date: "1984",
       title: "First Macintosh computer",
       description: `The Apple Macintosh—later rebranded as the Macintosh 128K—is the original Apple Macintosh personal computer.
-			<ul class="list-disc">
+			<ul className="list-disc">
       	<li>It played a pivotal role in establishing desktop publishing as a general office function.</li>
        	<li>The motherboard, a 9 in (23 cm) CRT monitor, and a floppy drive were housed in a beige case with integrated carrying handle; it came with a keyboard and single-button mouse.</li>
 			</ul>`,
@@ -32,34 +32,25 @@ export default function Timeline() {
   ];
 
   return (
-    <ul className="timeline timeline-snap-icon timeline-vertical cv-timeline">
-			{timeline.map((item, index) => (
-				<li key={index}>
-					{index > 0 && <hr />}
-					<div className="timeline-start">
-						<time className="font-mono italic text-base">{item.date}</time>
-					</div>
-					<div className="timeline-middle">
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 20 20"
-							fill="currentColor"
-							className="h-5 w-5"
-						>
-							<path
-								fillRule="evenodd"
-								d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-								clipRule="evenodd"
-							/>
-						</svg>
-					</div>
-					<div className="timeline-end cv-text-block">
-						<div className="text-lg font-black">{item.title}</div>
-						<div dangerouslySetInnerHTML={{ __html: item.description }}></div>
-					</div>
-					<hr />
-				</li>
-			))}
-    </ul>
+    <div>
+      {timeline.map((item, index) => (
+        <div className="flex gap-x-3" key={index}>
+          <div className="min-w-4 max-w-4 text-end mt-1 text-sm">
+              <time className="font-mono italic text-xs">{item.date} | {item.date}</time>
+          </div>
+
+          <div className="cv-timeline-line">
+            <div className="relative z-10 size-7 flex justify-center items-center">
+              <div className="size-2 rounded-full bg-gray-400 dark:bg-neutral-600"></div>
+            </div>
+          </div>
+          
+          <div className="grow pt-0.5 pb-8 cv-text-block">
+            <div className="text-lg font-black">{item.title}</div>
+            <div dangerouslySetInnerHTML={{ __html: item.description }}></div>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

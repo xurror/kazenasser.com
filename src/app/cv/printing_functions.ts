@@ -1,5 +1,4 @@
 import ExcelJS, { Table, Worksheet } from "exceljs";
-import * as d3 from "d3";
 import { createReadStream, createWriteStream, readFileSync, WriteStream } from "fs";
 
 enum EntriesColumns {
@@ -74,7 +73,6 @@ export class CVPrinter {
   }
 
   async init(dataLocation: string, sheetIsPubliclyReadable: boolean = true) {
-    // d3.csv
 
     await this.readExcel(dataLocation);
 

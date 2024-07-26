@@ -3,26 +3,35 @@
 @tailwind utilities;
 
 .cv-text-block {
-    @apply mb-5;
+    /* @apply mb-5; */
     @apply text-sm;
+}
+
+.cv-contact-list {
+    padding-inline-start: 0px !important;
+}
+
+.cv-contact-list-link {
+    text-decoration: none !important;
+    @apply link;
+    @apply link-hover;
+    @apply text-sm;
+    /* @apply text-blue-500; */
 }
 
 .cv-time-text {
-    @apply font-mono;
-    @apply italic;
-    @apply text-sm;
+    @apply font-mono italic text-sm;
 }
 
-.timeline-vertical {
-    margin-left: 15px;
+.cv-timeline-line {
+    @apply relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700
 }
 
-.timeline-vertical .timeline-start,
-.timeline-vertical .timeline-end {
-    @apply self-start;
+.cv-language-skills-outer-bar {
+    @apply flex w-full h-5 bg-gray-200 rounded-none overflow-hidden dark:bg-neutral-700;
 }
 
-:where(.timeline-vertical > li) {
-    grid-template-columns: 0 1fr;
-    @apply my-0 !important;
+.cv-language-skills-inner-bar {
+    @apply flex flex-col justify-center rounded-none overflow-hidden bg-blue-600;
+    @apply text-xs pl-1 text-white whitespace-nowrap dark:bg-blue-500;
 }

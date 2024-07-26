@@ -1,6 +1,7 @@
 import MdxLayout from '@/components/mdx-layout'
 import Timeline from '@/components/timeline'
-import { EnvelopeIcon, LinkIcon } from '@heroicons/react/16/solid'
+import Contact from '@/components/contact'
+import LanguageSkills from '@/components/language-skills'
 
 
 export default function MDXPage({ children }) {
@@ -13,33 +14,14 @@ export default function MDXPage({ children }) {
   The official Tailwind CSS Typography plugin provides a set of `prose` classes you can use to add beautiful typographic defaults to any vanilla HTML you don’t control, like HTML rendered from Markdown, or pulled from a CMS.
 </div>
 
-<div class="grid grid-cols-4 gap-4">
+<div className="grid grid-cols-4 gap-4">
   <div className='col-span-3'>
     <Timeline />
   </div>
 
-  <div className='text-base'>
-    <h3>Contact</h3>
-    <ul class="list-none">
-      <li>
-        <span className='flex flex-row gap-1'>
-          <EnvelopeIcon className="size-6 text-blue-500" />
-          <a className="link" href="mailto:kazenasser@gmail.com">{'kazenasser@gmail.com'}</a>
-        </span>
-      </li>
-      <li>
-        <span className='flex flex-row gap-1'>
-          <LinkIcon className="size-4 text-blue-500" />
-          <a className="link">kazenasser.com</a>
-        </span>
-      </li>
-      <li>
-        <span className='flex flex-row gap-1'>
-          <EnvelopeIcon className="size-4 text-blue-500" />
-          <a className="link">github.com/xurror</a>
-        </span>
-      </li>
-    </ul>
+  <div className="mt-20">
+    <Contact />
+    <LanguageSkills />
   </div>
 </div>
 
