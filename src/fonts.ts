@@ -7,16 +7,16 @@ export const lora = Lora({
     display: 'swap',
 });
   
-export const tinos = Raleway({
+export const raleway = Raleway({
     weight: ['100', '700'],
     style: ['normal', 'italic'],
     subsets: ["latin"],
     display: 'swap',
 });
  
-// export const tinos = Tinos({
-//     weight: ['400', '700'],
-//     style: ['normal', 'italic'],
-//     subsets: ["latin"],
-//     display: 'swap',
-// });
+export const tinos = Tinos({
+    weight: ['400', '700'],
+    style: ['normal', 'italic'],
+    subsets: ["latin"],
+    display: 'swap',
+});

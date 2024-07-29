@@ -1,10 +1,9 @@
 'use client';
 
-import Timeline from "@/components/timeline";
-import { useCallback, useLayoutEffect, useEffect, useState } from "react";
 import * as pagedjs from 'pagedjs';
 import CvSection from "@/components/cv-section";
 import CvAdditionalInformation from "@/components/cv-additional-information";
+import { useCallback, useLayoutEffect, useState } from 'react';
 
 export default function CVPage() {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -17,16 +16,39 @@ export default function CVPage() {
     const cv = document.querySelector("#CV");
     const previewer = new pagedjs.Previewer();
     previewer
-      .preview(cv?.innerHTML, [], document.querySelector("#pagedjs-preview"))
+      .preview(cv?.innerHTML, [], null)
       .then((flow: any) => {
+        cv!.remove();
         console.log("preview rendered, total pages", flow.total, { flow });
       });
   }, [])
   // useEffect(() => {
   useLayoutEffect(() => {
-    // previewCV(isInitialized);
+    previewCV(isInitialized);
     setIsInitialized(true);
   }, [isInitialized, previewCV]);
+
+
+
+  const downloadCV = () => {
+    const cv = document.querySelector("#CV");
+    if (!cv) return;
+
+    const downloadButton = document.querySelector("#cv-download-button");
+    downloadButton?.remove();
+
+    const currentDocument = document.body.cloneNode(true); // remove the button before cloning the document
+
+    new pagedjs.Previewer()
+      .preview(cv.innerHTML, [], null)
+      .then((flow: any) => {
+        cv.remove();
+        window.print();
+        document.body.replaceWith(currentDocument);
+        document.querySelector("#main-title")?.appendChild(downloadButton as any);
+      });
+  }
+
 
 
   return (
@@ -35,10 +57,20 @@ export default function CVPage() {
     {/* <div id="layout" className="layout">
       <aside id="aside"></aside> */}
 
+      {/* <iframe src="http://www.quirksmode.org/iframetest2.html" width="100%" height="100%"></iframe> */}
+
       <div className="font-serif">
         <div className="">
-          <div className="text-bold uppercase text-xl">
+          <div id="main-title" className="text-bold uppercase text-xl flex flex-row gap-3">
             Nasser Kaze
+            
+            <button id="cv-download-button" onClick={() => downloadCV()}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-5">
+                <path d="M10.75 2.75a.75.75 0 0 0-1.5 0v8.614L6.295 8.235a.75.75 0 1 0-1.09 1.03l4.25 4.5a.75.75 0 0 0 1.09 0l4.25-4.5a.75.75 0 0 0-1.09-1.03l-2.955 3.129V2.75Z" />
+                <path d="M3.5 12.75a.75.75 0 0 0-1.5 0v2.5A2.75 2.75 0 0 0 4.75 18h10.5A2.75 2.75 0 0 0 18 15.25v-2.5a.75.75 0 0 0-1.5 0v2.5c0 .69-.56 1.25-1.25 1.25H4.75c-.69 0-1.25-.56-1.25-1.25v-2.5Z" />
+              </svg>
+            </button> 
+
           </div>
           
           <div className="text-sm mb-2">

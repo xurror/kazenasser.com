@@ -24,7 +24,7 @@ export default function CvAdditionalInformation() {
     
   return (
     <div className="">
-      <div className="text-md font-medium uppercase mb-0 pb-0">Additional Information</div>
+      <div className="text-sm font-medium uppercase mb-0 pb-0">Additional Information</div>
       
       <hr className="rounded-sm mb-2 mt-0" />
 
