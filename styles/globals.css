@@ -2,20 +2,88 @@
 @tailwind components;
 @tailwind utilities;
 
+/* @import 'pagedjs-interface.css'; */
+@import 'pagedjs-print.css';
+
+* {
+    --pagedjs-margin-right: 0.4in !important;
+    --pagedjs-margin-left: 0.4in;
+    
+    --pagedjs-margin-top: 0.4in;
+    --pagedjs-margin-bottom: 0.4in;
+}
+
+/* @page {
+    margin: 0.5in 0.5in;
+  
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-size: 9px;
+      color: #606d78;
+    }
+  } */
+  
+.pagedjs_page {
+    background: white;
+    box-shadow: 10px 12px 30px 0 rgba(0, 0, 0, 0.1);
+    margin: 1rem;
+    @page {
+        size: A4;
+        @bottom-right {
+            content: counter(page);
+        }
+    }
+}
+
+/* #layout {
+    display: flex;
+}
+
+#aside {
+    width: 192px;
+    flex: 0 0 192px;
+    background: #011627;
+    min-height: 100vh;
+} */
+
+/* .aside{
+    width: var(--cv-sidebar-width);
+    padding: 0.6in var(--cv-sidebar-horizontal-padding);
+}
+
+.main{
+    width: var(--cv-main-width);
+    padding: 0 0.25in 0 0.25in;
+} */
+
+/* 
+.pagedjs_margin-top {
+    margin-top: .5rem;
+} */
+
 .cv-text-block {
     /* @apply mb-5; */
-    @apply text-sm;
+    @apply text-xs;
 }
 
 .cv-contact-list {
     padding-inline-start: 0px !important;
 }
 
+.cv-contact-list-2 {
+    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
+}
+
+.cv-add-info-list-2 {
+    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
+}
+
 .cv-contact-list-link {
-    text-decoration: none !important;
+    /* text-decoration: none !important; */
     @apply link;
     @apply link-hover;
-    @apply text-sm;
+    /* @apply text-xs; */
+    /* @apply text-wrap; */
     /* @apply text-blue-500; */
 }
 

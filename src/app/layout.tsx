@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Raleway } from "next/font/google";
 import "#/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const raleway = Raleway({
+  weight: ['100', '900'],
+  style: ['normal', 'italic'],
+  subsets: ["latin"],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,7 +26,10 @@ export default function RootLayout({
       <head>
         <script src="js/paged.polyfill.js" async></script>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={" " + inter.className}>
+        <div id="pagedjs-preview"></div>
+        {children}
+      </body>
     </html>
   );
 }
