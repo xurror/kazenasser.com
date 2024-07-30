@@ -23,7 +23,7 @@ export default function CvAdditionalInformation() {
     };
     
   return (
-    <div className="">
+    <div className="break-inside-avoid">
       <div className="header text-sm font-medium uppercase mb-0 pb-0">Additional Information</div>
       
       <hr className="rounded-sm mb-2 mt-0" />
