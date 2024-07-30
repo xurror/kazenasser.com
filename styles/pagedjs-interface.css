@@ -10,27 +10,60 @@
     --pagedjs-crop-color: black;
     --pagedjs-crop-shadow: white;
     --pagedjs-crop-stroke: 1px;
+
+    
+    --main-text-family: "Raleway", sans-serif;
+    --header-text-family: "Lora", serif;
+    --main-text-color: #444;
+    --header-text-color: #000;
+    --sidebar-width: 12rem; /* Shrink sidebar width  */
+    --sidebar-background-color: hsl(210, 100%, 98%); /* Make sidebar blue */
+    --sidebar-horizontal-padding: 0.01in; /* Reduce sidebar padding */
+    --decorator-outer-dim: 8px; /* Make position deliniating circles larger */
+    --decorator-color: hsl(210, 100%, 35%);
+    --point-circle-color: hsl(210, 100%, 25%);
+    --decorator-line-width: 1pt;
 }
 
+* {
+    --pagedjs-margin-right: 0.4in;
+    --pagedjs-margin-left: 0.4in;
+    
+    --pagedjs-margin-top: 0.4in;
+    --pagedjs-margin-bottom: 0.4in;
+}
+
+/* Customize some of the sizing variables */
+
+.pagedjs_pages .header {
+    font-family: var(--header-text-family);
+    color: var(--header-text-color);
+}
+
+.pagedjs_page {
+    font-family: var(--main-text-family);
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--main-text-color);
+}
+  
 /* To define how the book look on the screen: */
 @media screen, pagedjs-ignore {
-    body {
-        background-color: var(--color-background);
-        color: black;
-
-    }
-
     .pagedjs_pages {
         width: var(--pagedjs-width);
         height: 100%;
         margin: 0 auto;
+        padding-top: 10mm;
+        padding-bottom: 10mm;
+        /* background-color: var(--color-background); */
     }
 
     .pagedjs_page {
-        margin: 0;
-        padding-bottom: 10mm;
+        margin-top: 10mm;
+        margin-bottom: 10mm;
         background-color: var(--color-paper);
         box-shadow: 0 0 0 1px var(--color-pageSheet);
+        /* color: black; */
     }
 
     .pagedjs_pagebox{
@@ -39,6 +72,43 @@
 }
 
 
+@page {
+    background: linear-gradient(to left, var(--sidebar-background-color), var(--sidebar-background-color) var(--sidebar-background-width), white var(--sidebar-background-width));
+}
+
+#layout {
+    display: flex;
+}
+
+#aside {
+    width: 192px;
+    flex: 0 0 192px;
+    height: var(--content-area-height);
+    /* background: #011627; */
+}
+
+.aside{
+    /* width: var(--cv-sidebar-width); */
+    padding: 0.6in var(--cv-sidebar-horizontal-padding);
+
+    width: calc(var(--sidebar-width) + 9px);
+    height: var(--content-area-height);
+    line-height: 1.2;
+    font-size: 0.75rem;
+
+    float: right;
+    position: absolute;
+    right: 0;
+}
+
+.main{
+    width: var(--cv-main-width);
+    padding: 0 0.25in 0 0.25in;
+
+    float: left;
+    position: absolute;
+    left: 0;
+}
 
 
 
@@ -67,4 +137,19 @@
 .pagedjs_bleed-left .pagedjs_marks-crop:last-child,
 .pagedjs_bleed-right .pagedjs_marks-crop:last-child{
     box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_pages hr {
+    border: 1px solid black;
+}
+
+.pagedjs_page {
+    background: white;
+    box-shadow: 10px 12px 30px 0 rgba(0, 0, 0, 0.1);
+    @page {
+        size: A4;
+        @bottom-right {
+            content: counter(page);
+        }
+    }
 }

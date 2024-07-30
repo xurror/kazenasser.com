@@ -101,18 +101,17 @@ export default function CvSection({ section }: { section: string }) {
   const heading = (cvSections as any)[section].heading;
 
   return (
-    <div className="mb-5">
+    <div className="mb-5 block">
       <div className="text-sm font-medium uppercase mb-0 pb-0">{heading}</div>
 
-      <hr className="rounded-sm mb-2 mt-0" />
+      <hr className="rounded-sm mb-1 mt-0" />
 
       <div className={""}>
         {timeline.map((item: any, index: any) => (
           <div key={index} className="break-inside-avoid mb-2 text-justify text-xs">
 
-            <div className="flex flex-row justify-between text-sm font-bold">
+            <div className="header flex flex-row justify-between text-sm font-semibold">
               <div className="text-left">{item.institution}</div>
-
               {item.location && (
                 <div className="flex flex-row gap-1">
                   <svg
@@ -132,7 +131,7 @@ export default function CvSection({ section }: { section: string }) {
               )}
             </div>
 
-            <div key={index} className="flex flex-row justify-between text-xs font-semibold">
+            <div key={index} className="header flex flex-row justify-between text-xs font-semibold">
               <div className="text-left">{item.title}</div>
               <div className="text-right">{item.date}</div>
             </div>
@@ -140,7 +139,7 @@ export default function CvSection({ section }: { section: string }) {
             {item.entries?.length > 1 && (
               <ul className="list-disc list-outside my-0">
                 {item.entries.map((entry: any, index: any) => (
-                  <li key={index} className="my-0">{entry}</li>
+                  <li key={index} className="my-0 ml-4">{entry}</li>
                 ))}
               </ul>
             )}
