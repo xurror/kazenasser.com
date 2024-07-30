@@ -2,43 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'pagedjs-interface.css';
-/* @import 'pagedjs-print.css'; */
-
-.cv-contact-list {
-    padding-inline-start: 0px !important;
-}
-
-.cv-contact-list-2 {
-    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
-}
-
-.cv-add-info-list-2 {
-    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
-}
-
-.cv-contact-list-link {
-    text-decoration: none !important;
-    @apply link;
-    @apply link-hover;
-    /* @apply text-xs; */
-    @apply text-wrap;
-    @apply text-blue-500;
-}
-
-.cv-time-text {
-    @apply font-mono italic text-sm;
-}
-
-.cv-timeline-line {
-    @apply relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700
-}
-
-.cv-language-skills-outer-bar {
-    @apply flex w-full h-5 bg-gray-200 rounded-none overflow-hidden dark:bg-neutral-700;
-}
-
-.cv-language-skills-inner-bar {
-    @apply flex flex-col justify-center rounded-none overflow-hidden bg-blue-600;
-    @apply text-xs pl-1 text-white whitespace-nowrap dark:bg-blue-500;
-}
+@import 'cv.css';

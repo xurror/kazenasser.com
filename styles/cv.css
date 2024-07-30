@@ -35,6 +35,15 @@
 
 /* Customize some of the sizing variables */
 
+.pagedjs_page {
+    background: white;
+    box-shadow: 10px 12px 30px 0 rgba(0, 0, 0, 0.1);
+    @page {
+        size: A4;
+        @bottom-right { content: counter(page); }
+    }
+}
+
 .pagedjs_pages .header {
     font-family: var(--header-text-family);
     color: var(--header-text-color);
@@ -70,7 +79,6 @@
         box-shadow: 0 0 0 1px var(--color-pageBox);
     }
 }
-
 
 @page {
     background: linear-gradient(to left, var(--sidebar-background-color), var(--sidebar-background-color) var(--sidebar-background-width), white var(--sidebar-background-width));
@@ -143,13 +151,40 @@
     border: 1px solid black;
 }
 
-.pagedjs_page {
-    background: white;
-    box-shadow: 10px 12px 30px 0 rgba(0, 0, 0, 0.1);
-    @page {
-        size: A4;
-        @bottom-right {
-            content: counter(page);
-        }
-    }
+.cv-contact-list {
+    padding-inline-start: 0px !important;
+}
+
+.cv-contact-list-2 {
+    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
+}
+
+.cv-add-info-list-2 {
+    @apply inline-block relative pe-8 last:pe-0 last-of-type:before:hidden before:absolute before:top-1/2 before:end-3 before:-translate-y-1/2 before:size-1 before:bg-gray-300 before:rounded-full dark:before:bg-neutral-400
+}
+
+.cv-contact-list-link {
+    text-decoration: none !important;
+    @apply link;
+    @apply link-hover;
+    /* @apply text-xs; */
+    @apply text-wrap;
+    @apply text-blue-500;
+}
+
+.cv-time-text {
+    @apply font-mono italic text-sm;
+}
+
+.cv-timeline-line {
+    @apply relative last:after:hidden after:absolute after:top-7 after:bottom-0 after:start-3.5 after:w-px after:-translate-x-[0.5px] after:bg-gray-200 dark:after:bg-neutral-700
+}
+
+.cv-language-skills-outer-bar {
+    @apply flex w-full h-5 bg-gray-200 rounded-none overflow-hidden dark:bg-neutral-700;
+}
+
+.cv-language-skills-inner-bar {
+    @apply flex flex-col justify-center rounded-none overflow-hidden bg-blue-600;
+    @apply text-xs pl-1 text-white whitespace-nowrap dark:bg-blue-500;
 }

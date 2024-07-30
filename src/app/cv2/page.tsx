@@ -52,18 +52,19 @@ export default function CVPage() {
           <div className="text-sm mb-2">
             <ul className="my-0 px-0">
               <li className="cv-contact-list-2">
-                <span className='header font-semibold'>Location: </span>
+                <span className='header font-semibold'>Location:&nbsp;</span>
                 Berlin, Germany
               </li>
               <li className="cv-contact-list-2">
-                <span className='header font-semibold'>Email: </span> 
+                <span className='header font-semibold'>Email:&nbsp;</span>
                 <a className="cv-contact-list-link" href="mailto:kazenasser@gmail.com">kazenasser@gmail.com</a>
               </li>
               {/* <li className="cv-contact-list-2">
-                GitHub: <a className="cv-contact-list-link" href="https://github.com/xurror">github.com/xurror</a>
+                <span className='header font-semibold'>GitHub:&nbsp;</span>
+                <a className="cv-contact-list-link" href="https://github.com/xurror">github.com/xurror</a>
               </li> */}
               <li className="cv-contact-list-2">
-                <span className='header font-semibold'>LinkedIn: </span> 
+                <span className='header font-semibold'>LinkedIn:&nbsp;</span>
                 <a className="cv-contact-list-link" href="https://linkedin.com/in/xurror">linkedin.com/in/xurror</a>
               </li>
             </ul>
