@@ -20,7 +20,6 @@ export default function RootLayout({
         <script src="js/paged.polyfill.js" async></script>
       </head>
       <body>
-        <div id="pagedjs-preview" className="prose"></div>
         {children}
       </body>
     </html>

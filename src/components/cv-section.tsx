@@ -1,4 +1,4 @@
-import { CVPrinter } from "@/app/cv/printing_functions";
+import { CVPrinter } from "@/libs/printing_functions";
 
 export default async function CvSection({ section }: { section: string }) {
   const cvPrinter = await new CVPrinter().init("data.xlsx");
@@ -15,7 +15,7 @@ export default async function CvSection({ section }: { section: string }) {
           <div key={index} className="break-inside-avoid mb-2 text-justify text-xs">
 
             <div className="header flex flex-row justify-between text-sm font-semibold">
-              <div className="text-left">{item.loc}</div>
+              <div className="text-left">{item.title}</div>
               {item.institution && (
                 <div className="flex flex-row gap-1">
                   <svg
@@ -36,7 +36,7 @@ export default async function CvSection({ section }: { section: string }) {
             </div>
 
             <div key={index} className="header flex flex-row justify-between text-xs font-semibold">
-              <div className="text-left">{item.title}</div>
+            <div className="text-left">{item.location}</div>
               <div className="text-right">{item.timeline}</div>
             </div>
 

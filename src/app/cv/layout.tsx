@@ -1,34 +1,48 @@
-import { Lora, Raleway } from 'next/font/google'
-import styles from './styles.module.css'
+"use client";
 
-const lora = Lora({
-    weight: ['400', '700'],
-    style: ['normal', 'italic'],
-    subsets: ["latin"],
-    display: 'swap',
-});
+import * as pagedjs from "pagedjs";
+import { useCallback, useLayoutEffect, useState } from "react";
 
-const raleway = Raleway({
-    weight: ['100', '900'],
-    style: ['normal', 'italic'],
-    subsets: ["latin"],
-    display: 'swap',
-});
- 
-export default async function MdxLayout({ children }: { children: React.ReactNode }) {
-    
-    return <main
-            className={[
-                styles.cv,
-                styles.main,
-                lora.className,
-                raleway.className,
-                // "flex min-h-screen",
-                // "flex-col",
-                // "items-center",
-                // "justify-between",
-                "p-24"
-        ].join(' ')}>
-            {children}
-        </main>
+
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const renderCV = useCallback(async (isInitialized: boolean) => {
+    if (!isInitialized) return;
+
+    const cv = document.querySelector("#CV");
+    const loader = document.querySelector("#loader");
+    if (!cv) return;
+
+    new pagedjs.Previewer()
+      .preview(cv?.innerHTML, [], null)
+      .then((flow: any) => {
+        cv.remove();
+        loader?.remove();
+        document
+          .querySelector("#cv-download-button")
+          ?.addEventListener("click", () => window.print());
+      });
+  }, []);
+
+  useLayoutEffect(() => {
+    renderCV(isInitialized);
+    setIsInitialized(true);
+  }, [isInitialized, renderCV]);
+
+  return (
+    <>
+      <div id="loader" className="min-h-screen flex flex-col">
+        <div className="flex flex-auto flex-col justify-center items-center p-4 md:p-5">
+          <div className="flex justify-center">
+            <span className="loading loading-ring loading-lg"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="CV">
+        {children}
+      </div>
+    </>
+  )
 }

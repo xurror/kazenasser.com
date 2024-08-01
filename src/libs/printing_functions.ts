@@ -36,7 +36,7 @@ enum ContactInfoColumns {
 
 type SectionEntry = {
   title: string;
-  loc: string;
+  location: string;
   institution: string;
   timeline: string;
   description_bullets: string | string[];
@@ -59,17 +59,10 @@ type ContactInfo = {
 };
 
 export class CVPrinter {
-  pdfMode: boolean;
-  links: string[];
   entriesData: ExcelJS.Worksheet | undefined;
   skills: ExcelJS.Worksheet | undefined;
   textBlocks: ExcelJS.Worksheet | undefined;
   contactInfo: ExcelJS.Worksheet | undefined;
-
-  constructor(pdfMode: boolean = false, resumeMode: boolean = false) {
-    this.pdfMode = pdfMode;
-    this.links = [];
-  }
 
   async init(dataLocation: string) {
     await this.readExcel(dataLocation);
@@ -108,36 +101,6 @@ export class CVPrinter {
     return month + "-" + this.extractYear(date);
   }
 
-  sanitizeLinks(text: string | string[]): string | string[] {
-    function sanitize(text: string, links: string[]) {
-      const linkTitles =
-        text.match(/\[(.+?)\]/g)?.map((x) => x.slice(1, -1)) || [];
-      const linkDestinations =
-        text.match(/\((.+?)\)/g)?.map((x) => x.slice(1, -1)) || [];
-
-      linkDestinations.forEach((destination, index) => {
-        links.push(destination);
-        const superscript = `<sup>${links.length}</sup>`;
-        text = text.replace(
-          `[${linkTitles[index]}](${destination})`,
-          `${linkTitles[index]}${superscript}`
-        );
-      });
-    }
-
-    if (this.pdfMode) {
-      if (Array.isArray(text)) {
-        text.forEach((item) => {
-          sanitize(item, this.links);
-        });
-      } else {
-        sanitize(text, this.links);
-      }
-    }
-
-    return text;
-  }
-
   printSection(sectionId: string): SectionEntry[] {
     const sectionData: SectionEntry[] = [];
 
@@ -164,28 +127,22 @@ export class CVPrinter {
         }
 
         sectionData.push({
-          title: this.sanitizeLinks(
-            row[EntriesColumns.TITLE] as string
-          ) as string,
-          loc: row[EntriesColumns.LOC] as string,
+          title: row[EntriesColumns.TITLE] as string,
+          location: row[EntriesColumns.LOC] as string,
           timeline: timeline,
           institution: row[EntriesColumns.INSTITUTION] as string,
-          description_bullets: this.sanitizeLinks(
-            (row[EntriesColumns.DESCRIPTION_MD] as string)
-              .slice(2)
-              .split("\n- ") ?? [
+          description_bullets: (row[EntriesColumns.DESCRIPTION_MD] as string).slice(2).split("\n- ") ?? [
               row[EntriesColumns.DESCRIPTION_1],
               row[EntriesColumns.DESCRIPTION_2],
               row[EntriesColumns.DESCRIPTION_3],
-            ]
-          ),
+            ],
         });
       }
     });
 
     sectionData.forEach((entry: SectionEntry, index: any) => {
       ["title", "description_bullets"].forEach((col) => {
-        const stripRes = this.sanitizeLinks(entry[col as keyof SectionEntry]);
+        const stripRes = entry[col as keyof SectionEntry];
         sectionData[index][col as keyof SectionEntry] = stripRes as any;
       });
     });
@@ -201,23 +158,14 @@ export class CVPrinter {
       if (row[TextBlocksColumns.LOC] == label) {
         textBlockData.push({
           loc: row[TextBlocksColumns.LOC] as string,
-          text: this.sanitizeLinks(
-            row[TextBlocksColumns.TEXT] as string
-          ) as string,
+          text: row[TextBlocksColumns.TEXT] as string,
         });
       }
     });
     return textBlockData;
   }
 
-  printSkillBars(
-    outOf: number = 5,
-    barColor: string = "#969696",
-    barBackground: string = "#d9d9d9"
-  ): Skill[] {
-    const glueTemplate = `
-<div class='skill-bar' style="background:linear-gradient(to right, ${barColor} {width_percent}%, ${barBackground} {width_percent}% 100%)">{skill}</div>`;
-
+  printSkillBars(): Skill[] {
     const skills = [] as Skill[];
     (
       this.skills!!.getSheetValues() as unknown as ExcelJS.CellValue[][]
@@ -228,25 +176,6 @@ export class CVPrinter {
       });
     });
     return skills;
-
-    // this.skills.forEach((skill: any) => {
-    //   const widthPercent = Math.round((100 * skill.level) / outOf);
-    //   const skillBar = glueTemplate
-    //     .replace("{width_percent}", widthPercent.toString())
-    //     .replace("{skill}", skill.skill);
-    //   console.log(skillBar);
-    // });
-  }
-
-  printLinks(): void {
-    if (this.links.length > 0) {
-      console.log(
-        "\nLinks\n--------------------------------------------------------------------------------\n\n<br>\n"
-      );
-      this.links.forEach((link, index) => {
-        console.log(`${index + 1}. ${link}`);
-      });
-    }
   }
 
   printContactInfo(): ContactInfo[] {
@@ -261,8 +190,5 @@ export class CVPrinter {
       });
     });
     return contact_infos;
-    // this.contactInfo.forEach((info: any) => {
-    //   console.log(`- <i class='fa fa-${info.icon}'></i> ${info.contact}`);
-    // });
   }
 }
