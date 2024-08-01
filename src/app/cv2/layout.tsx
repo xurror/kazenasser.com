@@ -1,7 +1,35 @@
-import React from "react";
+"use client";
+
+import * as pagedjs from "pagedjs";
+import { useCallback, useLayoutEffect, useState } from "react";
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const renderCV = useCallback(async (isInitialized: boolean) => {
+    if (!isInitialized) return;
+
+    const cv = document.querySelector("#CV");
+    const loader = document.querySelector("#loader");
+    if (!cv) return;
+
+    new pagedjs.Previewer()
+      .preview(cv?.innerHTML, [], null)
+      .then((flow: any) => {
+        cv.remove();
+        loader?.remove();
+        document
+          .querySelector("#cv-download-button")
+          ?.addEventListener("click", () => window.print());
+      });
+  }, []);
+
+  useLayoutEffect(() => {
+    renderCV(isInitialized);
+    setIsInitialized(true);
+  }, [isInitialized, renderCV]);
+
   return (
     <div>
       <div id="loader" className="min-h-screen flex flex-col">

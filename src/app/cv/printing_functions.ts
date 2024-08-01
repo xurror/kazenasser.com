@@ -1,5 +1,4 @@
-import ExcelJS, { Table, Worksheet } from "exceljs";
-import { createReadStream, createWriteStream, readFileSync, WriteStream } from "fs";
+import ExcelJS from "exceljs";
 
 enum EntriesColumns {
   ID = 0,
@@ -41,53 +40,39 @@ type SectionEntry = {
   institution: string;
   timeline: string;
   description_bullets: string | string[];
-}
+};
 
 type TextBlock = {
   loc: string;
   text: string;
-}
+};
 
 type Skill = {
   skill: string;
   level: string;
-}
+};
 
 type ContactInfo = {
   loc: string;
   icon: string;
   contact: string;
-}
+};
 
 export class CVPrinter {
   pdfMode: boolean;
   links: string[];
-  entriesData: Worksheet | undefined;
-  skills: Worksheet | undefined; // Use appropriate type
-  textBlocks: Worksheet | undefined; // Use appropriate type
-  contactInfo: Worksheet | undefined; // Use appropriate type
+  entriesData: ExcelJS.Worksheet | undefined;
+  skills: ExcelJS.Worksheet | undefined;
+  textBlocks: ExcelJS.Worksheet | undefined;
+  contactInfo: ExcelJS.Worksheet | undefined;
 
   constructor(pdfMode: boolean = false, resumeMode: boolean = false) {
     this.pdfMode = pdfMode;
     this.links = [];
   }
 
-  async init(dataLocation: string, sheetIsPubliclyReadable: boolean = true) {
-
+  async init(dataLocation: string) {
     await this.readExcel(dataLocation);
-
-    // if (dataLocation.includes("docs.google.com")) {
-    //   if (sheetIsPubliclyReadable) {
-    //     // Handle public Google Sheets access
-    //     this.readGoogleSheet(dataLocation, sheetIsPubliclyReadable);
-    //   } else {
-    //     // Handle private Google Sheets access
-    //     // Note: Authentication setup needed
-    //   }
-    // } else {
-    //   // Handle CSV data
-    //   this.readCSV(dataLocation);
-    // }
     return this;
   }
 
@@ -101,46 +86,34 @@ export class CVPrinter {
     this.contactInfo = workbook.getWorksheet(4);
   }
 
-  async readGoogleSheet(
-    dataLocation: string,
-    sheetIsPubliclyReadable: boolean
-  ) {
-    // Implement Google Sheets reading logic
-    // This is a placeholder for actual implementation
+  extractYear(date: string | undefined): string | undefined {
+    if (!date) return;
+
+    const reg = /(20|19)[0-9]{2}/g;
+    const match = reg.exec(date);
+    if (!match) return;
+
+    const year = match[0];
+    return year;
   }
 
-    readCSV(dataLocation: string) {
-        // Implement CSV reading logic using PapaParse or similar
-        // This is a placeholder for actual implementation
-    }
+  parseDates(date: string | undefined): string | undefined {
+    if (!date) return;
 
-    extractYear(date: string | undefined): string | undefined {
-        if (!date) return;
+    const reg = /(\w+|\d+)(?=(\s|\/|-)(20|19)[0-9]{2})/g;
+    const match = reg.exec(date);
+    if (!match) return;
 
-        const reg = /(20|19)[0-9]{2}/g;
-        const match = reg.exec(date);
-        if (!match) return;
-
-        const year = match[0];
-        return year;
-    //   return dates.map(date => format(new Date(), 'yyyy'));
-    }
-
-    parseDates(date: string | undefined): string | undefined {
-        if (!date) return;
-        
-        const reg = /(\w+|\d+)(?=(\s|\/|-)(20|19)[0-9]{2})/g
-        const match = reg.exec(date);
-        if (!match) return;
-
-        const month = match[0];
-        return month + '-' + this.extractYear(date);
-    }
+    const month = match[0];
+    return month + "-" + this.extractYear(date);
+  }
 
   sanitizeLinks(text: string | string[]): string | string[] {
     function sanitize(text: string, links: string[]) {
-      const linkTitles = text.match(/\[(.+?)\]/g)?.map((x) => x.slice(1, -1)) || [];
-      const linkDestinations = text.match(/\((.+?)\)/g)?.map((x) => x.slice(1, -1)) || [];
+      const linkTitles =
+        text.match(/\[(.+?)\]/g)?.map((x) => x.slice(1, -1)) || [];
+      const linkDestinations =
+        text.match(/\((.+?)\)/g)?.map((x) => x.slice(1, -1)) || [];
 
       linkDestinations.forEach((destination, index) => {
         links.push(destination);
@@ -168,48 +141,47 @@ export class CVPrinter {
   printSection(sectionId: string): SectionEntry[] {
     const sectionData: SectionEntry[] = [];
 
-    (this.entriesData!!.getSheetValues() as unknown as ExcelJS.CellValue[][])
-        .forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
-            if (row[1] == sectionId) {
-                const start = row[EntriesColumns.START]
-                const end = row[EntriesColumns.END]
-                const start_year = this.extractYear(start as string)
-                const end_year = this.extractYear(end as string)
+    (
+      this.entriesData!!.getSheetValues() as unknown as ExcelJS.CellValue[][]
+    ).forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
+      if (row[1] == sectionId) {
+        const start = row[EntriesColumns.START];
+        const end = row[EntriesColumns.END];
+        const start_year = this.extractYear(start as string);
+        const end_year = this.extractYear(end as string);
 
-                let timeline = 'N/A'
-                if (!start_year && end_year) {
-                    timeline = end_year
-                } else if (start_year && !end_year) {
-                    timeline = `Current - ${start_year}`
-                } else if (!!start_year && !!end_year) {
-                    if (start_year == end_year) {
-                        timeline = end_year
-                    } else {
-                        timeline = `${start_year} - ${end_year}`
-                    }
-                }
+        let timeline = "N/A";
+        if (!start_year && end_year) {
+          timeline = end_year;
+        } else if (start_year && !end_year) {
+          timeline = `Current - ${start_year}`;
+        } else if (!!start_year && !!end_year) {
+          if (start_year == end_year) {
+            timeline = end_year;
+          } else {
+            timeline = `${start_year} - ${end_year}`;
+          }
+        }
 
-                sectionData.push({
-                    title: this.sanitizeLinks(row[EntriesColumns.TITLE] as string) as string,
-                    loc: row[EntriesColumns.LOC] as string,
-                    timeline: timeline,
-                    institution: row[EntriesColumns.INSTITUTION] as string,
-                    description_bullets: this.sanitizeLinks(
-                      (row[EntriesColumns.DESCRIPTION_MD] as string).slice(2).split("\n- ") ?? [
-                          row[EntriesColumns.DESCRIPTION_1],
-                          row[EntriesColumns.DESCRIPTION_2],
-                          row[EntriesColumns.DESCRIPTION_3]
-                      ]
-                    ),
-                });
-            }
-        })
-
-    // if (sectionData.length === 0) {
-    //   throw new Error(
-    //     `Tried to print section ${sectionId} with no entries. Make sure everything is spelled correctly or remove this section.`
-    //   );
-    // }
+        sectionData.push({
+          title: this.sanitizeLinks(
+            row[EntriesColumns.TITLE] as string
+          ) as string,
+          loc: row[EntriesColumns.LOC] as string,
+          timeline: timeline,
+          institution: row[EntriesColumns.INSTITUTION] as string,
+          description_bullets: this.sanitizeLinks(
+            (row[EntriesColumns.DESCRIPTION_MD] as string)
+              .slice(2)
+              .split("\n- ") ?? [
+              row[EntriesColumns.DESCRIPTION_1],
+              row[EntriesColumns.DESCRIPTION_2],
+              row[EntriesColumns.DESCRIPTION_3],
+            ]
+          ),
+        });
+      }
+    });
 
     sectionData.forEach((entry: SectionEntry, index: any) => {
       ["title", "description_bullets"].forEach((col) => {
@@ -223,16 +195,18 @@ export class CVPrinter {
 
   printTextBlock(label: string): TextBlock[] {
     const textBlockData = [] as TextBlock[];
-    (this.textBlocks!!.getSheetValues() as unknown as ExcelJS.CellValue[][])
-      .forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
-        if (row[TextBlocksColumns.LOC] == label) {
-          textBlockData.push({
-            loc: row[TextBlocksColumns.LOC] as string,
-            text: this.sanitizeLinks(row[TextBlocksColumns.TEXT] as string) as string,
-          });
-        }
+    (
+      this.textBlocks!!.getSheetValues() as unknown as ExcelJS.CellValue[][]
+    ).forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
+      if (row[TextBlocksColumns.LOC] == label) {
+        textBlockData.push({
+          loc: row[TextBlocksColumns.LOC] as string,
+          text: this.sanitizeLinks(
+            row[TextBlocksColumns.TEXT] as string
+          ) as string,
+        });
       }
-    );
+    });
     return textBlockData;
   }
 
@@ -245,14 +219,14 @@ export class CVPrinter {
 <div class='skill-bar' style="background:linear-gradient(to right, ${barColor} {width_percent}%, ${barBackground} {width_percent}% 100%)">{skill}</div>`;
 
     const skills = [] as Skill[];
-    (this.skills!!.getSheetValues() as unknown as ExcelJS.CellValue[][])
-      .forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
-        skills.push({
-          skill: row[SkillsColumns.SKILL] as string,
-          level: row[SkillsColumns.LEVEL] as string,
-        });
-      }
-    );
+    (
+      this.skills!!.getSheetValues() as unknown as ExcelJS.CellValue[][]
+    ).forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
+      skills.push({
+        skill: row[SkillsColumns.SKILL] as string,
+        level: row[SkillsColumns.LEVEL] as string,
+      });
+    });
     return skills;
 
     // this.skills.forEach((skill: any) => {
@@ -277,15 +251,15 @@ export class CVPrinter {
 
   printContactInfo(): ContactInfo[] {
     const contact_infos = [] as ContactInfo[];
-    (this.contactInfo!!.getSheetValues() as unknown as ExcelJS.CellValue[][])
-      .forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
-        contact_infos.push({
-          loc: row[ContactInfoColumns.LOC] as string,
-          icon: row[ContactInfoColumns.ICON] as string,
-          contact: row[ContactInfoColumns.CONTACT] as string,
-        });
-      }
-    );
+    (
+      this.contactInfo!!.getSheetValues() as unknown as ExcelJS.CellValue[][]
+    ).forEach((row: ExcelJS.CellValue[], rowNumber: number) => {
+      contact_infos.push({
+        loc: row[ContactInfoColumns.LOC] as string,
+        icon: row[ContactInfoColumns.ICON] as string,
+        contact: row[ContactInfoColumns.CONTACT] as string,
+      });
+    });
     return contact_infos;
     // this.contactInfo.forEach((info: any) => {
     //   console.log(`- <i class='fa fa-${info.icon}'></i> ${info.contact}`);

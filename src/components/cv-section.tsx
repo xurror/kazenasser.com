@@ -1,124 +1,22 @@
-export default function CvSection({ section }: { section: string }) {
-  const cvSections = {
-    professionalExperience: {
-      heading: "Professional Experience",
-      entries:  [
-        {
-          date: "1984 | 1991",
-          title: "First Macintosh computer",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            'The Apple Macintosh—later rebranded as the Macintosh 128K—is the original Apple Macintosh personal computer.',
-            'It played a pivotal role in establishing desktop publishing as a general office function.',
-            'The motherboard, a 9 in (23 cm) CRT monitor, and a floppy drive were housed in a beige case with integrated carrying handle; it came with a keyboard and single-button mouse.',
-          ],
-        },
-        {
-          date: "1998",
-          title: "iMac",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `iMac is a family of all-in-one Mac desktop computers designed and built by Apple Inc. It has been the primary part of Apple's consumer desktop offerings since its debut in August 1998, and has evolved through seven distinct forms.`
-          ],
-        },
-        {
-          date: "2001",
-          title: "iPod",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `The iPod is a discontinued series of portable media players and multi-purpose mobile devices designed and marketed by Apple Inc. The first version was released on October 23, 2001, about 8+1⁄2 months after the Macintosh version of iTunes was released. Apple sold an estimated 450 million iPod products as of 2022. Apple discontinued the iPod product line on May 10, 2022. At over 20 years, the iPod brand is the oldest to be discontinued by Apple`
-          ],
-        },
-        {
-          date: "2007",
-          title: "iPhone",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `iPhone is a line of smartphones produced by Apple Inc. that use Apple's own iOS mobile operating system. The first-generation iPhone was announced by then-Apple CEO Steve Jobs on January 9, 2007. Since then, Apple has annually released new iPhone models and iOS updates. As of November 1, 2018, more than 2.2 billion iPhones had been sold. As of 2022, the iPhone accounts for 15.6% of global smartphone market share`
-          ],
-        },
-        {
-          date: "2015",
-          title: "Apple Watch",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `The Apple Watch is a line of smartwatches produced by Apple Inc. It incorporates fitness tracking, health-oriented capabilities, and wireless telecommunication, and integrates with iOS and other Apple products and services`,
-          ],
-        },
-      ]
-    },
-    volunteerActivity: {
-      heading: "Volunteer Activity",
-      entries:  [
-        {
-          date: "2001",
-          title: "iPod",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `The iPod is a discontinued series of portable media players and multi-purpose mobile devices designed and marketed by Apple Inc. The first version was released on October 23, 2001, about 8+1⁄2 months after the Macintosh version of iTunes was released. Apple sold an estimated 450 million iPod products as of 2022. Apple discontinued the iPod product line on May 10, 2022. At over 20 years, the iPod brand is the oldest to be discontinued by Apple`
-          ],
-        },
-        {
-          date: "2015",
-          title: "Apple Watch",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            `The Apple Watch is a line of smartwatches produced by Apple Inc. It incorporates fitness tracking, health-oriented capabilities, and wireless telecommunication, and integrates with iOS and other Apple products and services`,
-          ],
-        },
-      ]
-    },
-    education: {
-      heading: "Education",
-      entries:  [
-        {
-          date: "1998",
-          title: "iMac",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-          entries: [
-            "GPA 3.45/4, Class Coordinator",
-          ],
-        },
-        {
-          date: "2007",
-          title: "iPhone",
-          institution: "Apple Inc.",
-          location: "Cupertino, California",
-        },
-      ]
-    },
-  };
+import { CVPrinter } from "@/app/cv/printing_functions";
 
-  // let researches = [] as any;
-  // new CVPrinter().init("data.xlsx").then((cvPrinter) => {
-  //   researches = cvPrinter.printSection(section);
-  // });
-
-  const timeline = (cvSections as any)[section].entries;
-  const heading = (cvSections as any)[section].heading;
-
+export default async function CvSection({ section }: { section: string }) {
+  const cvPrinter = await new CVPrinter().init("data.xlsx");
+  const timeline = cvPrinter.printSection(section);
+  
   return (
     <div className="mb-5 block">
-      {/* <div className="text-sm font-medium uppercase mb-0 pb-0">{heading}</div> */}
       <div className="text-sm font-medium uppercase mb-0 pb-0">{section.replace('_', ' ')}</div>
 
       <hr className="rounded-sm mb-1 mt-0" />
 
       <div className={""}>
-        {timeline.map((item: any, index: any) => (
+        {timeline && timeline.map((item: any, index: any) => (
           <div key={index} className="break-inside-avoid mb-2 text-justify text-xs">
 
             <div className="header flex flex-row justify-between text-sm font-semibold">
-              <div className="text-left">{item.institution}</div>
-              {item.location && (
+              <div className="text-left">{item.loc}</div>
+              {item.institution && (
                 <div className="flex flex-row gap-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -132,17 +30,17 @@ export default function CvSection({ section }: { section: string }) {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <div className="text-right">{item.location}</div>
+                  <div className="text-right">{item.institution}</div>
                 </div>
               )}
             </div>
 
             <div key={index} className="header flex flex-row justify-between text-xs font-semibold">
               <div className="text-left">{item.title}</div>
-              <div className="text-right">{item.date}</div>
+              <div className="text-right">{item.timeline}</div>
             </div>
 
-            {/* <div>
+            <div>
               {
                 Array.isArray(item.description_bullets) ?
                 <ul className="list-disc list-outside my-0">
@@ -152,9 +50,9 @@ export default function CvSection({ section }: { section: string }) {
                   </ul>
                   : <div dangerouslySetInnerHTML={{ __html: item.description_bullets }}></div>
               }
-            </div> */}
+            </div>
 
-            {item.entries?.length > 1 && (
+            {/* {item.entries?.length > 1 && (
               <ul className="list-disc list-outside my-0">
                 {item.entries.map((entry: any, index: any) => (
                   <li key={index} className="my-0 ml-4">{entry}</li>
@@ -164,7 +62,7 @@ export default function CvSection({ section }: { section: string }) {
 
             {item.entries?.length === 1 && (
               <div dangerouslySetInnerHTML={{ __html: item.entries[0] }}></div>
-            )}
+            )} */}
 
           </div>
         ))}

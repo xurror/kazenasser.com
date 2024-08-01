@@ -1,37 +1,8 @@
-"use client";
-
-import * as pagedjs from "pagedjs";
 import CvSection from "@/components/cv-section";
 import CvAdditionalInformation from "@/components/cv-additional-information";
-import { useCallback, useLayoutEffect, useState } from "react";
 
-export default function CVPage() {
-  const [isInitialized, setIsInitialized] = useState(false);
 
-  const previewCV = useCallback((isInitialized: boolean) => {
-    if (!isInitialized) return;
-
-    const cv = document.querySelector("#CV");
-    const loader = document.querySelector("#loader");
-    if (!cv) return;
-
-    new pagedjs.Previewer()
-      .preview(cv?.innerHTML, [], null)
-      .then((flow: any) => {
-        cv.remove();
-        loader?.remove();
-        document
-          .querySelector("#cv-download-button")
-          ?.addEventListener("click", () => window.print());
-        console.log("preview rendered, total pages", flow.total, { flow });
-      });
-  }, []);
-
-  useLayoutEffect(() => {
-    previewCV(isInitialized);
-    setIsInitialized(true);
-  }, [isInitialized, previewCV]);
-
+export default async function CVPage() {
   return (
     <div className="">
       <div id="layout" className="layout">
@@ -87,8 +58,8 @@ export default function CVPage() {
             </ul>
           </div>
 
-          <CvSection section="professionalExperience" />
-          <CvSection section="volunteerActivity" />
+          <CvSection section="research_positions" />
+          <CvSection section="teaching_positions" />
           <CvSection section="education" />
           <CvAdditionalInformation />
         </div>

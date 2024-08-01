@@ -1,6 +1,5 @@
 import MapPinIcon from '@heroicons/react/24/solid/esm/MapPinIcon';
 import { CVPrinter } from './printing_functions';
-import { Graduate } from 'next/font/google';
 
 export async function Section({ section }: { section: string }) {
     const cvPrinter = await new CVPrinter().init("data.xlsx");
