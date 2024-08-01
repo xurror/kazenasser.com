@@ -1,27 +1,18 @@
-import { tinos } from "@/fonts";
 import React from "react";
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const layoutClassNames = [
-    "font-serif",
-    "prose",
-    "prose-neutral",
-    "prose-xl",
-    // "md:prose-2xl",
-    "dark:prose-invert",
-    "prose-a:text-blue-600",
-    "mx-auto",
-    "my-10",
-    "py-10",
-    // tinos.className
-  ].join(" ");
   return (
     <div>
-      <div
-        id="CV"
-        className={layoutClassNames}
-      >
+      <div id="loader" className="min-h-screen flex flex-col">
+        <div className="flex flex-auto flex-col justify-center items-center p-4 md:p-5">
+          <div className="flex justify-center">
+            <span className="loading loading-ring loading-lg"></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="CV">
         {children}
       </div>
     </div>

@@ -80,6 +80,12 @@
     }
 }
 
+@media print {
+    #cv-download-button {
+        display: none;
+    }
+}
+
 @page {
     background: linear-gradient(to left, var(--sidebar-background-color), var(--sidebar-background-color) var(--sidebar-background-width), white var(--sidebar-background-width));
 }

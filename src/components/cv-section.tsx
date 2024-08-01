@@ -97,12 +97,18 @@ export default function CvSection({ section }: { section: string }) {
     },
   };
 
+  // let researches = [] as any;
+  // new CVPrinter().init("data.xlsx").then((cvPrinter) => {
+  //   researches = cvPrinter.printSection(section);
+  // });
+
   const timeline = (cvSections as any)[section].entries;
   const heading = (cvSections as any)[section].heading;
 
   return (
     <div className="mb-5 block">
-      <div className="text-sm font-medium uppercase mb-0 pb-0">{heading}</div>
+      {/* <div className="text-sm font-medium uppercase mb-0 pb-0">{heading}</div> */}
+      <div className="text-sm font-medium uppercase mb-0 pb-0">{section.replace('_', ' ')}</div>
 
       <hr className="rounded-sm mb-1 mt-0" />
 
@@ -135,6 +141,18 @@ export default function CvSection({ section }: { section: string }) {
               <div className="text-left">{item.title}</div>
               <div className="text-right">{item.date}</div>
             </div>
+
+            {/* <div>
+              {
+                Array.isArray(item.description_bullets) ?
+                <ul className="list-disc list-outside my-0">
+                      {item.description_bullets.map((entry: any, i: any) => (
+                          <li key={i} className="my-0 ml-4">{entry}</li>
+                      ))}
+                  </ul>
+                  : <div dangerouslySetInnerHTML={{ __html: item.description_bullets }}></div>
+              }
+            </div> */}
 
             {item.entries?.length > 1 && (
               <ul className="list-disc list-outside my-0">
