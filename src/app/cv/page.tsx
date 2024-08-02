@@ -1,8 +1,15 @@
-import CvSection from "@/components/cv-section";
-import CvAdditionalInformation from "@/components/cv-additional-information";
+import AdditionalInformation from "@/components/cv/additional-information";
+import Education from "@/components/cv/education";
+import ProfessionalExperience from "@/components/cv/professional-experience";
+import VolunteerActivity from "@/components/cv/volunteer-activity";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Nasser Kaze | CV",
+};
 
 export default async function CVPage() {
+
   return (
     <div className="">
       <div id="layout" className="layout">
@@ -58,10 +65,10 @@ export default async function CVPage() {
             </ul>
           </div>
 
-          <CvSection section="research_positions" />
-          <CvSection section="teaching_positions" />
-          <CvSection section="education" />
-          <CvAdditionalInformation />
+          <ProfessionalExperience />
+          <VolunteerActivity />
+          <Education />
+          <AdditionalInformation />
         </div>
       </div>
     </div>

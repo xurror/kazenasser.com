@@ -1,0 +1,153 @@
+{
+  "Professional Experience": [
+    {
+      "When": "02/2023 - Present",
+      "Where": "Berlin/Germany",
+      "Organization": "LINUS Digital Finance",
+      "Role": "Software Engineer",
+      "Achievements": [
+        "Implemented a data synchronization job to sync data between our back office in salesforce and our marketplace application for our clients, ensuring clients have up to date information about their investments and our back office can directly interface with clients portfolio significantly improving user experience and satisfaction on the platform and streamlining the data delivery process from our back office.",
+        "Used Java and Spring Boot to set up an automated SEPA file generation utility to automatically generate SEPA files reducing investor payments operations time and minimizing error from manual entry.",
+        "Facilitated new users KYC and compliance regulations by implementing a user Identification process by matching provided picture and personal information with their identification document.",
+        "Reduced overall operational cost by 20% by reducing infrastructural complexity by refactoring, simplifying and discontinuing unused and unnecessary microservices."
+      ],
+      "Skills": [
+        "Java, Kotlin, Go, Python",
+        "",
+        "",
+        ""
+      ],
+      "Unique Experiences": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "When": "07/2021 - 01/2022",
+      "Where": "Johannesburg/South Africa",
+      "Organization": "OpenFactor Technologies",
+      "Role": "Independent Consultant",
+      "Achievements": [
+        "Analyzed users' airtime recharge history using SQL and Python and discovered patterns  between categories of users and their loan repayment behavior which enabled the development of an automated loan review system.",
+        "Automated the approval and disbursement of low risk loans by developing and integrating a clustering algorithm to categorize customers based on their transaction history significantly reducing loan approval time and management intervention on the system.\n"
+      ],
+      "Skills": [
+        "",
+        ""
+      ],
+      "Unique Experiences": [
+        "",
+        ""
+      ]
+    },
+    {
+      "When": "08/2021 - 01/2023",
+      "Where": "Hannover/Germany",
+      "Organization": "iMbu On Demand IT Solutions GmbH",
+      "Role": "Software Engineer",
+      "Achievements": [
+        "Improved overall system robustness and scalability by over 40% by making use of core Java Design Patterns to refactor core parts of the system allowing the system to evolve and adapt to changing requirements.",
+        "Increased total application test coverage by 36% using Test Driven Design(TDD) which drastically improved the applications fault tolerance and reduced the occurrence of bugs in production.",
+        "Improved application integration and delivery time by over 50% by setting up and managing CI/CD pipelines allowing the team to focus on development saving the company over 60 hours of integration and deployment work.",
+        "Reduced request processing time by 61% by using caching to optimize requests and query processing significantly improving user experience and reducing page load time."
+      ],
+      "Skills": [
+        "",
+        "",
+        "",
+        ""
+      ],
+      "Unique Experiences": [
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "When": "09/2020 - 07/2021",
+      "Where": "Copenhagen/Denmark",
+      "Organization": "Muellners Foundation",
+      "Role": "Software Engineer",
+      "Achievements": [
+        "Upgraded the loan module to accommodate over 1000 clients by implementing a Bi-Monthly loan scheduler that made it possible for the company to target a new market for clients who want their loans repaid twice every month",
+        "Enhanced the bulk import tool to be able to import over 500k loan records from a traditional spreadsheet by implementing an excel parser allowing the company to easily accommodate new financial institutions."
+      ],
+      "Skills": [
+        "",
+        ""
+      ],
+      "Unique Experiences": [
+        "",
+        ""
+      ]
+    }
+  ],
+  "Volunteer Activity": [
+    {
+      "When": "05/2020 - Present",
+      "Where": "",
+      "Organization": "The Apache Software Foundation",
+      "Role": "Apache Fineract Committer",
+      "Achievements": [
+        "Participate in the development and maintenance of Apache Fineract, a core banking platform serving billions of unbanked and underbanked."
+      ],
+      "Skills": [
+        ""
+      ],
+      "Unique Experiences": [
+        ""
+      ]
+    },
+    {
+      "When": "05/2022 - 09/2022",
+      "Where": "",
+      "Organization": "The Apache Software Foundation",
+      "Role": "Google Summer of Code Mentor",
+      "Achievements": [
+        "Guided interns through GSoC projects and followed up on their progress all through."
+      ],
+      "Skills": [
+        ""
+      ],
+      "Unique Experiences": [
+        ""
+      ]
+    },
+    {
+      "When": "12/2021 - 02/2022",
+      "Where": "",
+      "Organization": "The Apache Software Foundation",
+      "Role": "Outreachy Mentor",
+      "Achievements": [
+        "Guided interns through Outreachy projects and followed up on their progress all through."
+      ],
+      "Skills": [
+        ""
+      ],
+      "Unique Experiences": [
+        ""
+      ]
+    }
+  ],
+  "Education": [
+    {
+      "When": "2017 - 2021",
+      "Where": "Buea, Cameroon",
+      "Organization": "University of Buea",
+      "Degree Program": "Bachelor of Engineering",
+      "Specialization": "Software Engineering",
+      "Achievements": [
+        "GPA 3.45/4, Class Coordinator"
+      ],
+      "Skills": [
+        ""
+      ],
+      "Unique Experiences": [
+        ""
+      ]
+    }
+  ]
+}

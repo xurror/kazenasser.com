@@ -1,4 +1,4 @@
-export default function CvAdditionalInformation() {
+export default function AdditionalInformation() {
     const cvAdditionalInformation = {
         skills: {
             heading: "Skills",
