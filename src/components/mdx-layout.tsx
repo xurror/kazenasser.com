@@ -5,8 +5,8 @@ export default function MdxLayout({ children }: { children: React.ReactNode }) {
   // Create any shared layout or styles here
   
   return (
-    <main className="@container" data-theme="dark">
-      <article className="prose prose-slate mx-auto mt-8 lg:prose-2xl">
+    <main className="flex min-h-screen flex-col items-center justify-between">
+      <article className="prose prose-neutral mx-auto">
         {children}
       </article>
     </main>
