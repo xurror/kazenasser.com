@@ -3,3 +3,7 @@
 @tailwind utilities;
 
 @import 'cv.css';
+
+body {
+    font-family: Chalkboard, comic sans ms, "sans-serif";
+}

@@ -7,6 +7,9 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    dark: {
+      "fontFamily": "Chalkboard,comic sans ms,'sans-serif'"
+    }
   },
   corePlugins: {
     aspectRatio: false,
