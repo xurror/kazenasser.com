@@ -26,7 +26,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
-    "remark-pdf": "^0.0.13",
+    "remark-pdf": "^0.0.14",
     "remark-rehype": "^11.1.0",
     "remark-sectionize": "^2.0.0",
     "unist-util-find-after": "^5.0.0",
