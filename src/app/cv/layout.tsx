@@ -1,5 +1,6 @@
 "use client";
 
+import Script from "next/script";
 import * as pagedjs from "pagedjs";
 import { useCallback, useLayoutEffect, useState } from "react";
 
@@ -32,6 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      {/* <Script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js" /> */}
       <div id="loader" className="min-h-screen flex flex-col">
         <div className="flex flex-auto flex-col justify-center items-center p-4 md:p-5">
           <div className="flex justify-center">
