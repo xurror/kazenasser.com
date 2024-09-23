@@ -14,7 +14,7 @@
     "@mdx-js/loader": "^3.0.1",
     "@mdx-js/react": "^3.0.1",
     "@next/mdx": "^14.2.5",
-    "next": "14.2.5",
+    "next": "14.2.13",
     "pagedjs": "^0.4.3",
     "react": "^18",
     "react-dom": "^18",
