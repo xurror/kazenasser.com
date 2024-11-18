@@ -6,7 +6,7 @@ export default async function Page() {
 
 	if (user) {
 		console.log(user);
-		fetch('http://localhost:3001/', {
+		fetch('http://127.0.0.1:8000/api/private', {
 			headers: {
 				'Authorization': `Bearer ${idToken}`,
 			},
@@ -17,7 +17,9 @@ export default async function Page() {
 		<div>
 			{user && (
 				<div>
-					<Image src={user.picture} alt={user.name} />
+					<picture>
+						<img src={user.picture} alt={user.name} />
+					</picture>
 					<h2>{user.name}</h2>
 					<p>{user.email}</p>
 				</div>
