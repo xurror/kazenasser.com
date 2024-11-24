@@ -171,8 +171,8 @@
 
 .cv-contact-list-link {
     text-decoration: none !important;
-    @apply link;
-    @apply link-hover;
+    /* @apply link;
+    @apply link-hover; */
     /* @apply text-xs; */
     @apply text-wrap;
     @apply text-blue-500;

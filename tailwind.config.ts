@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -7,54 +9,20 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    dark: {
-      "fontFamily": "Chalkboard,comic sans ms,'sans-serif'"
-    }
+    extend: {
+      fontFamily: {
+        sans: ['InterVariable', ...defaultTheme.fontFamily.sans],
+        // sans: ['Chalkboard', ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
   corePlugins: {
     aspectRatio: false,
   },
   plugins: [
-    require('daisyui'),
-    require("@tailwindcss/typography"),
+    // require("@tailwindcss/typography"),
     require('@tailwindcss/aspect-ratio'),
     require('@tailwindcss/container-queries'),
   ],
-  daisyui: {
-    themes: [
-      "light",
-      "dark",
-      "cupcake",
-      "bumblebee",
-      "emerald",
-      "corporate",
-      "synthwave",
-      "retro",
-      "cyberpunk",
-      "valentine",
-      "halloween",
-      "garden",
-      "forest",
-      "aqua",
-      "lofi",
-      "pastel",
-      "fantasy",
-      "wireframe",
-      "black",
-      "luxury",
-      "dracula",
-      "cmyk",
-      "autumn",
-      "business",
-      "acid",
-      "lemonade",
-      "night",
-      "coffee",
-      "winter",
-      "dim",
-      "nord",
-      "sunset",
-    ],
-  },
 };
 export default config;

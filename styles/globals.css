@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'cv.css';
-
-body {
-    font-family: Chalkboard, comic sans ms, "sans-serif";
+@layer base {
+  @font-face {
+    font-family: Chalkboard;
+    font-weight: 400;
+    src: url(/fonts/Chalkboard-Regular.ttf);
+  }
 }
