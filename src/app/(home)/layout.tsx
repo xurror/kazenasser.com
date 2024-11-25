@@ -1,6 +1,9 @@
 "use client";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ImageKitProvider } from "imagekitio-next";
+
+const queryClient = new QueryClient();
 
 export default function Layout({
   children,
@@ -9,6 +12,8 @@ export default function Layout({
 }>) {
   const imageKitUrl = process.env.NEXT_PUBLIC_URL_ENDPOINT;
   return (
-    <ImageKitProvider urlEndpoint={imageKitUrl}>{children}</ImageKitProvider>
+    <QueryClientProvider client={queryClient}>
+      <ImageKitProvider urlEndpoint={imageKitUrl}>{children}</ImageKitProvider>
+    </QueryClientProvider>
   );
 }
