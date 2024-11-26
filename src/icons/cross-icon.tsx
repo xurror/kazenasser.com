@@ -1,5 +1,5 @@
 export default function CrossIcon({
-    className="h-5 w-5 text-zinc-500 dark:text-zinc-400",
+    className="h-6 w-6 text-zinc-500 dark:text-zinc-400",
     ...props
     }: {
     className?: string;

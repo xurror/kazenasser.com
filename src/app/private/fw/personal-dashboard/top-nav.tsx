@@ -39,7 +39,7 @@ export default function TopNav({
           </svg>
         </button>
         <div className="mx-4">
-          {/* <ThemeSwitcher /> */}
+          <ThemeSwitcher />
         </div>
 
         <div className="min-w-0 flex-1">
@@ -174,7 +174,7 @@ const PopUpMenu = ({
                 <div className="-mb-2 px-4 pt-5">
                   <button
                     aria-label="Close menu"
-                    className="-m-1 p-1 px-3"
+                    className="-m-1 p-1 px-2"
                     type="button"
                     onClick={() => setMobileMenuOpen(false)}
                   >

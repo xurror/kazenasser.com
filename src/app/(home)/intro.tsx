@@ -18,7 +18,7 @@ export default function Intro() {
               </p>
               <div className="mt-6 flex gap-6">
                 <a href="https://linkedin.com/in/xurror">
-                  <Image
+                  <img
                     src="/LinkedIn-Logos/Li-Logo.png"
                     alt="LinkedIn Logo"
                     width={96}
@@ -31,7 +31,7 @@ export default function Intro() {
                 </a>
 
                 <a href="https://github.com/xurror">
-                  <Image
+                  <img
                     src="/GitHub Logos/PNG/GitHub_Lockup_Light.png"
                     alt="LinkedIn Logo"
                     width={96}
