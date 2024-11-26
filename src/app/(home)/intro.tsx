@@ -23,6 +23,10 @@ export default function Intro() {
                     alt="LinkedIn Logo"
                     width={96}
                     height={96}
+                    style={{
+                      width: "92px",
+                      height: "22px",
+                    }}
                   />
                 </a>
 
@@ -32,6 +36,10 @@ export default function Intro() {
                     alt="LinkedIn Logo"
                     width={96}
                     height={96}
+                    style={{
+                      width: "92px",
+                      height: "22px",
+                    }}
                   />
                 </a>
 

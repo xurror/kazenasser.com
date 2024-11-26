@@ -47,7 +47,7 @@ export default function WorkExperience() {
         {experiences?.map((item) => (
           <li key={item.company} className="flex gap-4">
             <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
-              <picture>
+              {/* <picture>
                 <img
                   alt=""
                   loading="lazy"
@@ -59,7 +59,7 @@ export default function WorkExperience() {
                   style={{ color: "transparent" }}
                   src="/_next/static/media/planetaria.ecd81ade.svg"
                 />
-              </picture>
+              </picture> */}
             </div>
             <dl className="flex flex-auto flex-wrap gap-x-2">
               <dt className="sr-only">Company</dt>
@@ -73,15 +73,15 @@ export default function WorkExperience() {
               <dt className="sr-only">Date</dt>
               <dd
                 className="ml-auto text-xs text-zinc-400 dark:text-zinc-500"
-                aria-label={`${item.duration.start} until ${item.duration.end}`}
+                aria-label={`${item.duration.start, "YYYY-MM"} until ${item.duration.end}`}
               >
                 <time dateTime={item.duration.start}>
-                  {moment(item.duration.start).format("YYYY")}
+                  {moment(item.duration.start, "YYYY-MM").format("YYYY")}
                 </time>
                 <span aria-hidden="true">—</span>
                 <time className="capitalize" dateTime={item.duration.end}>
-                  {moment(item.duration.end).isValid()
-                    ? moment(item.duration.end).format("YYYY")
+                  {moment(item.duration.end, "YYYY-MM").isValid()
+                    ? moment(item.duration.end, "YYYY-MM").format("YYYY")
                     : item.duration.end}
                 </time>
               </dd>

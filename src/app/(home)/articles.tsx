@@ -1,7 +1,8 @@
+"use client";
+
 import moment from "moment";
 
 export default function Articles() {
-
   const articles: any[] = [
     // {
     //   title: "Crafting a design system for a multiplanetary future",
@@ -47,7 +48,7 @@ export default function Articles() {
             >
               <span className="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500"></span>
             </span>
-            {moment(article.date).format("LL")}
+            {moment(article.date, "YYYY-MM-DD").format("LL")}
           </time>
           <p className="relative z-10 mt-2 text-sm text-zinc-600 dark:text-zinc-400">
             {article.description}

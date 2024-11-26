@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import * as pagedjs from "pagedjs";
 import { useCallback, useLayoutEffect, useState } from "react";
 
