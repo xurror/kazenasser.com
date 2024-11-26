@@ -5,7 +5,7 @@ import EventsIcon from "@/icons/events-icon";
 import HomeIcon from "@/icons/home-icon";
 import OrdersIcon from "@/icons/orders-icon";
 import SettingsIcon from "@/icons/settings-icon";
-import Nav, { NavItem } from "./nav";
+import Nav from "./nav";
 import TopNav from "./top-nav";
 
 export default function NavMenu() {

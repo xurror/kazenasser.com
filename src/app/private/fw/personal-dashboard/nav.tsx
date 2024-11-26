@@ -5,7 +5,8 @@ import ChangelogIcon from "@/icons/changelog-icon";
 import InboxIcon from "@/icons/inbox-icon";
 import SearchIcon from "@/icons/search-icon";
 import SupportIcon from "@/icons/support-icon";
-import { IKImage } from "imagekitio-next";
+import Image from "next/image";
+import { useSession } from "next-auth/react"
 
 export type NavItem = {
   icon: () => JSX.Element;
@@ -20,6 +21,8 @@ export default function Nav({
   navigation: NavItem[];
 }>) {
   const upcomingEvents: string[] = [];
+
+  const { data: session } = useSession()
 
   return (
     <nav className="flex h-full min-h-0 flex-col">
@@ -196,8 +199,8 @@ export default function Nav({
                   data-slot="avatar"
                   className="size-10 inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1 outline outline-1 -outline-offset-1 outline-black/[--ring-opacity] dark:outline-white/[--ring-opacity] rounded-[--avatar-radius] *:rounded-[--avatar-radius]"
                 >
-                  <IKImage
-                    path="nasser_kaze.jpeg"
+                  <Image
+                    src={session?.user?.image ?? "/next.svg"}
                     width={256}
                     height={256}
                     fetchPriority="high"
@@ -212,7 +215,7 @@ export default function Nav({
                     Nasser
                   </span>
                   <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                    me@kazenasser.com
+                    {session?.user?.email}
                   </span>
                 </span>
               </span>

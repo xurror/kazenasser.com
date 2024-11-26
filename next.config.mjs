@@ -26,6 +26,11 @@ const nextConfig = {
         hostname: "ik.imagekit.io",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "s.gravatar.com",
+        port: "",
+      },
     ],
   },
 }

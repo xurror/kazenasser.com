@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Nav, { NavItem } from "./nav";
 import CrossIcon from "@/icons/cross-icon";
 import ThemeSwitcher from "@/components/theme-switcher";
+import { useSession } from "next-auth/react";
 
 export default function TopNav({
   navigation,
@@ -14,6 +15,8 @@ export default function TopNav({
   navigation: NavItem[];
 }>) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session } = useSession()
+
   return (
     <div>
       <header className="flex items-center px-4 lg:hidden">
@@ -112,7 +115,7 @@ export default function TopNav({
                     className="inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1 outline outline-1 -outline-offset-1 outline-black/[--ring-opacity] dark:outline-white/[--ring-opacity] rounded-[--avatar-radius] *:rounded-[--avatar-radius]"
                   >
                     <IKImage
-                      path="nasser_kaze.jpeg"
+                      src={session?.user?.image ?? "/next.svg"}
                       width={256}
                       height={256}
                       fetchPriority="high"
