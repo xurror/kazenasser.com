@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, DialogPanel } from "@headlessui/react";
-import { IKImage } from "imagekitio-next";
+import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Nav, { NavItem } from "./nav";
@@ -114,7 +114,7 @@ export default function TopNav({
                     data-slot="avatar"
                     className="inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1 outline outline-1 -outline-offset-1 outline-black/[--ring-opacity] dark:outline-white/[--ring-opacity] rounded-[--avatar-radius] *:rounded-[--avatar-radius]"
                   >
-                    <IKImage
+                    <Image
                       src={session?.user?.image ?? "/next.svg"}
                       width={256}
                       height={256}
