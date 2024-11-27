@@ -1,4 +1,4 @@
-import NavMenu from "./nav-menu";
+import NavMenu from "./_components/nav-menu";
 
 export default function Layout({
   children,
