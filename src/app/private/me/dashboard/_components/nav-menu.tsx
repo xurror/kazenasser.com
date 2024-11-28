@@ -10,15 +10,19 @@ import TopNav from "./top-nav";
 
 export default function NavMenu() {
   const navigation = [
-    { icon: HomeIcon, label: "Home", href: "/demos/sidebar", current: true },
-    { icon: EventsIcon, label: "Events", href: "/demos/sidebar/events" },
-    { icon: OrdersIcon, label: "Orders", href: "/demos/sidebar/orders" },
+    { icon: HomeIcon, label: "Home", href: "/private/me/dashboard" },
+    { icon: EventsIcon, label: "Events", href: "/private/me/dashboard/events" },
+    { icon: OrdersIcon, label: "Orders", href: "/private/me/dashboard/orders" },
     {
       icon: BroadcastsIcon,
       label: "Broadcasts",
-      href: "/demos/sidebar/broadcasts",
+      href: "/private/me/dashboard/broadcasts",
     },
-    { icon: SettingsIcon, label: "Settings", href: "/demos/sidebar/settings" },
+    {
+      icon: SettingsIcon,
+      label: "Settings",
+      href: "/private/me/dashboard/settings",
+    },
   ];
 
   return (
