@@ -2,8 +2,6 @@
 
 import ThemeSwitcher from "@/components/theme-switcher";
 import ChangelogIcon from "@/icons/changelog-icon";
-import InboxIcon from "@/icons/inbox-icon";
-import SearchIcon from "@/icons/search-icon";
 import SupportIcon from "@/icons/support-icon";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -22,7 +20,6 @@ export default function Nav({
   navigation: NavItem[];
 }>) {
   const pathname = usePathname();
-  console.log(pathname);
   const upcomingEvents: string[] = [];
 
   const { data: session } = useSession();
@@ -108,7 +105,7 @@ export default function Nav({
       <div className="flex flex-1 flex-col overflow-y-auto p-4">
         <div data-slot="section" className="flex flex-col gap-0.5">
           {navigation.map(({ icon: Icon, label, href }) => {
-            const current = href.startsWith(pathname);
+            const current = href === pathname;
             return (
               <span className="relative" key={label}>
                 {current && (
