@@ -2,8 +2,14 @@ import Checkbox from "./_components/checkbox";
 import Input from "./_components/input";
 import TextArea from "./_components/textarea";
 import ComboBox from "./_components/combobox";
+import { Button } from "@headlessui/react";
+import { classNames } from "@/libs/utils";
+import { getSession } from "@auth0/nextjs-auth0";
 
-export default function Page() {
+export default async function Page() {
+  const { user } = (await getSession()) ?? {};
+  // console.log(user);
+
   return (
     <div className="mx-auto max-w-6xl">
       <form className="mx-auto max-w-4xl" method="post">
@@ -154,16 +160,46 @@ export default function Page() {
             ></span>
             Reset
           </button>
-          <button
-            type="submit"
-            className="relative isolate inline-flex items-center justify-center gap-x-2 rounded-lg border text-base/6 font-semibold px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)] sm:text-sm/6 focus:outline-none data-[focus]:outline data-[focus]:outline-2 data-[focus]:outline-offset-2 data-[focus]:outline-blue-500 data-[disabled]:opacity-50 [&amp;>[data-slot=icon]]:-mx-0.5 [&amp;>[data-slot=icon]]:my-0.5 [&amp;>[data-slot=icon]]:size-5 [&amp;>[data-slot=icon]]:shrink-0 [&amp;>[data-slot=icon]]:text-[--btn-icon] [&amp;>[data-slot=icon]]:sm:my-1 [&amp;>[data-slot=icon]]:sm:size-4 forced-colors:[--btn-icon:ButtonText] forced-colors:data-[hover]:[--btn-icon:ButtonText] border-transparent bg-[--btn-border] dark:bg-[--btn-bg] before:absolute before:inset-0 before:-z-10 before:rounded-[calc(theme(borderRadius.lg)-1px)] before:bg-[--btn-bg] before:shadow dark:before:hidden dark:border-white/5 after:absolute after:inset-0 after:-z-10 after:rounded-[calc(theme(borderRadius.lg)-1px)] after:shadow-[shadow:inset_0_1px_theme(colors.white/15%)] after:data-[active]:bg-[--btn-hover-overlay] after:data-[hover]:bg-[--btn-hover-overlay] dark:after:-inset-px dark:after:rounded-lg before:data-[disabled]:shadow-none after:data-[disabled]:shadow-none text-white [--btn-bg:theme(colors.zinc.900)] [--btn-border:theme(colors.zinc.950/90%)] [--btn-hover-overlay:theme(colors.white/10%)] dark:text-white dark:[--btn-bg:theme(colors.zinc.600)] dark:[--btn-hover-overlay:theme(colors.white/5%)] [--btn-icon:theme(colors.zinc.400)] data-[active]:[--btn-icon:theme(colors.zinc.300)] data-[hover]:[--btn-icon:theme(colors.zinc.300)] cursor-default"
+          <Button
+            className={classNames(
+              "inline-flex items-center gap-2 rounded-lg focus:outline-none",
+              "text-base/6 sm:text-sm/6 text-white font-semibold",
+              "shadow-inner shadow-white/10 disabled:shadow-none",
+              "py-1.5 px-3",
+              "bg-zinc-950 dark:bg-white/20",
+              "data-[focus]:outline-1 data-[focus]:outline-white",
+              "data-[hover]:bg-gray-600 data-[open]:bg-gray-700 "
+            )}
           >
-            <span
-              className="absolute left-1/2 top-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 [@media(pointer:fine)]:hidden"
-              aria-hidden="true"
-            ></span>
+            Save Data
+          </Button>
+          {/* <Button
+            className={classNames(
+              "rounded-lg",
+              "text-base/6 sm:text-sm/6 text-white",
+              // "bg-zinc-950 dark:bg-white/20", // outlined
+              "data-[hover]:bg-zinc-950/70 data-[active]:bg-zinc-950/50",
+              "dark:data-[hover]:bg-white/40 dark:data-[active]:bg-white/60",
+              "px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]",
+              "shadow-sm disabled:shadow-none"
+            )}
+          >
             Save changes
-          </button>
+          </Button> */}
+          <Button
+            className={classNames(
+              "rounded-lg",
+              "text-base/6 sm:text-sm/6 dark:text-white font-semibold",
+              "text-base/6 sm:text-sm/6 text-white",
+              "bg-zinc-950 dark:bg-white/20",
+              "data-[hover]:bg-zinc-950/70 data-[active]:bg-zinc-950/50",
+              "dark:data-[hover]:bg-white/40 dark:data-[active]:bg-white/60",
+              "px-[calc(theme(spacing[3.5])-1px)] py-[calc(theme(spacing[2.5])-1px)] sm:px-[calc(theme(spacing.3)-1px)] sm:py-[calc(theme(spacing[1.5])-1px)]",
+              "shadow-sm disabled:shadow-none"
+            )}
+          >
+            Save changes
+          </Button>
         </div>
       </form>
     </div>

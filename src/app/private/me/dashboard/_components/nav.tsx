@@ -3,8 +3,8 @@
 import ThemeSwitcher from "@/components/theme-switcher";
 import ChangelogIcon from "@/icons/changelog-icon";
 import SupportIcon from "@/icons/support-icon";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
 
 export type NavItem = {
@@ -22,7 +22,8 @@ export default function Nav({
   const pathname = usePathname();
   const upcomingEvents: string[] = [];
 
-  const { data: session } = useSession();
+  const { user, error, isLoading } = useUser();
+  // console.log(user);
 
   return (
     <nav className="flex h-full min-h-0 flex-col">
@@ -46,7 +47,9 @@ export default function Nav({
                 data-slot="avatar"
                 className="inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1 outline outline-1 -outline-offset-1 outline-black/[--ring-opacity] dark:outline-white/[--ring-opacity] rounded-full *:rounded-full"
               >
-                <img className="size-full" src="/placeholder.webp" alt="" />
+                <picture>
+                  <img className="size-full" src="/placeholder.webp" alt="" />
+                </picture>
               </span>
               <span className="truncate">TitanForge</span>
               <svg
@@ -206,7 +209,7 @@ export default function Nav({
                   className="size-10 inline-grid shrink-0 align-middle [--avatar-radius:20%] [--ring-opacity:20%] *:col-start-1 *:row-start-1 outline outline-1 -outline-offset-1 outline-black/[--ring-opacity] dark:outline-white/[--ring-opacity] rounded-[--avatar-radius] *:rounded-[--avatar-radius]"
                 >
                   <Image
-                    src={session?.user?.image ?? "/next.svg"}
+                    src={user?.picture ?? "/next.svg"}
                     width={256}
                     height={256}
                     fetchPriority="high"
@@ -221,7 +224,7 @@ export default function Nav({
                     Nasser
                   </span>
                   <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                    {session?.user?.email}
+                    {user?.email}
                   </span>
                 </span>
               </span>
