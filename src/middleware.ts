@@ -5,14 +5,14 @@ import {
 import { NextResponse } from "next/server";
 
 export default withMiddlewareAuthRequired({
-  async middleware(req) {
-    console.log("middleware");
-    const res = NextResponse.next();
-    const user = (await getSession(req, res)) ?? {};
-    // console.log(user);
-    // res.cookies.set('hl', user.language);
-    return res;
-  },
+  // async middleware(req) {
+  //   console.log("middleware");
+  //   const res = NextResponse.next();
+  //   const user = (await getSession(req, res)) ?? {};
+  //   // console.log(user);
+  //   // res.cookies.set('hl', user.language);
+  //   return res;
+  // },
   returnTo(req) {
     return `${req.nextUrl.basePath}${req.nextUrl.pathname}`;
   },
