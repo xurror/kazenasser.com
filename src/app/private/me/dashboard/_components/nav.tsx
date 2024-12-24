@@ -23,7 +23,7 @@ export default function Nav({
   const upcomingEvents: string[] = [];
 
   const { user, error, isLoading } = useUser();
-  // console.log(user);
+  console.log(user);
 
   return (
     <nav className="flex h-full min-h-0 flex-col">

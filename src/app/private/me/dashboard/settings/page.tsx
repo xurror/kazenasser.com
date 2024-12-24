@@ -4,12 +4,8 @@ import TextArea from "./_components/textarea";
 import ComboBox from "./_components/combobox";
 import { Button } from "@headlessui/react";
 import { classNames } from "@/libs/utils";
-import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function Page() {
-  const { user } = (await getSession()) ?? {};
-  // console.log(user);
-
   return (
     <div className="mx-auto max-w-6xl">
       <form className="mx-auto max-w-4xl" method="post">
