@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "choose-your-story"
+version = "0.1.0"
+description = "A choice based story"
+authors = ["xurror <kazenasser@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.1.0"
+python-dotenv = "^1.0.1"
+python-jose = "^3.3.0"
+flask-cors = "^5.0.0"
+six = "^1.17.0"
+flask-session = "^0.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
